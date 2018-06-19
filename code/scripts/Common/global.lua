@@ -16,3 +16,4 @@ LuaUtils = require "Common.utils"
 require "Common.define"
 Cfg = require "Common.config"
 
+LuaUtils.Call = { Func = "System.Func", Table = { Arg1 = "1", Arg2 = 2 } }

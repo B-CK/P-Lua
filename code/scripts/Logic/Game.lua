@@ -9,6 +9,7 @@ local game;
 local transform;
 local gameObject;
 
+
 function Game.InitViewPanels()
     for i = 1, #PanelNames do
         require("View/" .. tostring(PanelNames[i]))
