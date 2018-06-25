@@ -3,6 +3,7 @@
 --开始初始化类以及常量数据
 require "Common.global"
 require "Common.functions"
+--require("3rd.cjson.lua2json")
 
 --模块管理器初始化
 local _modules = {
@@ -14,6 +15,9 @@ function Main()
         local module = require(name)
         module.Init()
     end
+
+    --输出Csv
+
 end
 
 --场景切换通知

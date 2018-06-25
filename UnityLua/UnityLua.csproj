@@ -239,8 +239,28 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Config\AllType\AllClass.cs" />
+    <Compile Include="Assets\Config\AllType\CommondEnum.cs" />
+    <Compile Include="Assets\Config\AllType\SingleClass.cs" />
+    <Compile Include="Assets\Config\Card\Card.cs" />
+    <Compile Include="Assets\Config\Card\CardElement.cs" />
+    <Compile Include="Assets\Config\Card\CardType.cs" />
+    <Compile Include="Assets\Config\CfgManager.cs" />
+    <Compile Include="Assets\Config\CfgObject.cs" />
+    <Compile Include="Assets\Config\DataStream.cs" />
+    <Compile Include="Assets\Lson\Lson.AllType.AllClass.cs" />
+    <Compile Include="Assets\Lson\Lson.AllType.CommondEnum.cs" />
+    <Compile Include="Assets\Lson\Lson.AllType.SingleClass.cs" />
+    <Compile Include="Assets\Lson\Lson.Card.Card.cs" />
+    <Compile Include="Assets\Lson\Lson.Card.CardElement.cs" />
+    <Compile Include="Assets\Lson\Lson.Card.CardType.cs" />
+    <Compile Include="Assets\Lson\LsonManager.cs" />
+    <Compile Include="Assets\Lson\LsonObject.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\Common\LuaBehaviour.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\Common\LuaLoader.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\ConstDefine\AppConst.cs" />

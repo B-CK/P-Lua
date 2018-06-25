@@ -2,9 +2,13 @@ local lower = string.lower
 local setmetatable = setmetatable
 local tonumber = tonumber
 local format = string.format
+local root = Util.DataPath .. '../../../Code/Config/'
 
 local Stream = {}
 Stream.__index = Stream
+Stream.name = "Stream"
+
+local out = ''
 
 local Split = function(line)
     local sep, fields = "▃", {}
@@ -15,11 +19,15 @@ local Split = function(line)
     return fields
 end
 
-function Stream.New(dataFile)
+function Stream.new(dataFile)
+    out = ''
     local o = {}
     setmetatable(o, Stream)
-    o.GetLine = io.lines(dataFile)
-    o.cloums = Split(o.GetLine())
+    o.dataFile = dataFile
+    o.GetLine = io.lines(root .. dataFile)
+    o.idx = 0
+    o.line = 0
+    o:NextRow()
     o.hasNext = true
     return o
 end
@@ -31,6 +39,7 @@ end
 function Stream:Close()
     while self.GetLine() do
     end
+    print(out)
 end
 
 function Stream:NextRow()
@@ -39,18 +48,23 @@ function Stream:NextRow()
         return nil
     end
     self.columns = Split(line)
+    self.idx = 1
+    self.line = self.line + 1
+    out = out .. '\r\n'
 end
 
-function Stream:NextColum(Stream)
-    if self.cIndex > #self.columns then
+function Stream:NextColum()
+    if self.idx > #self.columns then
         local status = self:NextRow()
         if not status then
             self.hasNext = false
             return nil
         end
     end
-    self.cIndex = self.cIndex + 1
-    return self.columns[self.cIndex]
+    local result = self.columns[self.idx]
+    out = out .. "▃" .. result
+    self.idx = self.idx + 1
+    return result
 end
 
 function Stream:GetInt()
@@ -85,6 +99,7 @@ function Stream:GetList(type)
     local result = {}
     local length = self:GetInt()
     local method = self['Get' .. type]
+    print(self.dataFile, self.line, self.idx, length)
     for i = 1, length do
         result[i] = method(self)
     end
@@ -104,7 +119,7 @@ end
 
 function Stream:GetObject(name)
     local getter = self["Get" .. name]
-    return getter()
+    return getter(self)
 end
 
 return Stream

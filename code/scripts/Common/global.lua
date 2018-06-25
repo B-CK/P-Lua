@@ -14,6 +14,16 @@ GameObject = UnityEngine.GameObject;
 Class = require "Common.class"
 LuaUtils = require "Common.utils"
 require "Common.define"
-Cfg = require "Common.config"
+CfgMgr = require "Cfg.CfgManager"
+CfgMgr.init()
+
+local super = {name = "base", enable = true}
+super.__index = super
+local child = {pos = 1}
+setmetatable(child, super)
+
+print(child.name)
+print(child.pos)
+print(child.enable)
 
 LuaUtils.Call = { Func = "System.Func", Table = { Arg1 = "1", Arg2 = 2 } }
