@@ -47,6 +47,7 @@ function Stream:NextRow()
     if line == nil then
         return nil
     end
+    print("----------------------------", out, line ~= nil)
     self.columns = Split(line)
     self.idx = 1
     self.line = self.line + 1
@@ -63,6 +64,7 @@ function Stream:NextColum()
     end
     local result = self.columns[self.idx]
     out = out .. "▃" .. result
+    print("-->>", self.idx, result, debug.traceback("Data"))
     self.idx = self.idx + 1
     return result
 end

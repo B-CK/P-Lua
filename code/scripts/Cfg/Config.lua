@@ -8,7 +8,9 @@ for _, s in ipairs({
 	local data = Stream.new(s.output)
 	local cfg = {}
 	while data.hasNext do
-		cfg[s.index] = data[s.method](data)
+		local value = data[s.method](data)
+		local key = value[s.index]
+		cfg[key] = value
 	end
 	cfgs[s.name] = cfg
 	data:Close()
