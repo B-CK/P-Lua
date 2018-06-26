@@ -1,4 +1,4 @@
-﻿local Stream = require("Cfg.DataStream")
+local Stream = require("Cfg.DataStream")
 local find = string.find
 local sub = string.sub
 

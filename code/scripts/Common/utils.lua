@@ -1,6 +1,7 @@
 local insert = table.insert
-local fmt = string.format
 local concat = table.concat
+local sort = sort
+local fmt = string.format
 local tostring = tostring
 local schar = string.char
 local sbyte = string.byte
@@ -76,8 +77,8 @@ local function CompareList(list1, list2, cmp)
                 table_sort(list1, cmp)
                 table_sort(list2, cmp)
             else
-                table.sort(list1)
-                table.sort(list2)
+                sort(list1)
+                sort(list2)
             end
             for i, value in ipairs(list1) do
                 if value ~= list2[i] then
@@ -479,6 +480,25 @@ local function CheckName(name)
     return true, name
 end
 
+local function Split(str, sep)
+    local fields = {}
+    local flag = "(.-)" .. sep
+    local last_end = 1
+    local s, e, cap = str:find(flag, 1)
+    while s do
+        if s ~= 1 or cap ~= "" then
+            insert(fields, cap)
+        end
+        last_end = e + 1
+        s, e, cap = str:find(flag, last_end)
+    end
+    if last_end <= #str then
+        cap = str:sub(last_end)
+        insert(fields, cap)
+    end
+    return fields
+end
+
 return {
     bytes_to_string = bytes_to_string,
     array_to_set = array_to_set,
@@ -503,4 +523,6 @@ return {
     table_sub_count = table_sub_count,
     SetDefaultComponent = SetDefaultComponent,
     CheckName = CheckName,
+    my_xpcall = my_xpcall,
+    Split = Split,
 }
