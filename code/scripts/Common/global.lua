@@ -20,4 +20,3 @@ CfgMgr = require "Cfg.CfgManager"
 local _, err = LuaUtils.my_xpcall(CfgMgr.init)
 
 
-

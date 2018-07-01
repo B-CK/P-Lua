@@ -33,11 +33,6 @@ function Game.OnInitOK()
         ctrl:Awake();
     end
 
-    local va = string.sub("ax0bxQ", 1, -2)
-    local a = { b = { c = { d = 2 } } }
-    local b = {}
-    LuaUtils.deep_copy_to(a, b)
-    logError(b.b.c.d)
     logWarn('LuaFramework InitOK--->>>');
 end
 

@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: BaseSprite
+  m_EditorData:
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - m_BuildTarget: Android
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+    - m_BuildTarget: Standalone
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+    packingParameters:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 089362a5a325c1844bf7d6f261ac40b3, type: 3}
+    - {fileID: 2800000, guid: 9cc1836900a22144a84d8f50c6ef421d, type: 3}
+    - {fileID: 2800000, guid: bd13f8f6691edac46865d806aed6294f, type: 3}
+    - {fileID: 2800000, guid: bfcc926d901286e47bc4cb1302d4cb55, type: 3}
+    bindAsDefault: 0
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 089362a5a325c1844bf7d6f261ac40b3, type: 3}
+  - {fileID: 21300000, guid: bd13f8f6691edac46865d806aed6294f, type: 3}
+  - {fileID: 21300000, guid: 9cc1836900a22144a84d8f50c6ef421d, type: 3}
+  - {fileID: 21300000, guid: bfcc926d901286e47bc4cb1302d4cb55, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Texture_Activity_03
+  - Button_Common_Disable
+  - Button_Common_Pressed
+  - Button_Common_Normal
+  m_Tag: BaseSprite
+  m_IsVariant: 0

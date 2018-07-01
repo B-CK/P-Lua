@@ -65,39 +65,6 @@ end
 local _event = {}
 _event.__index = _event
 
---废弃
-function _event:Add(func, obj)
-	assert(func)		
-
-	if self.keepSafe then			
-		func = xfunctor(func, obj)
-	else
-		func = functor(func, obj)
-	end	
-
-	if self.lock then
-		local node = {value = func, _prev = 0, _next = 0, removed = true}
-		table.insert(self.opList, function() self.list:pushnode(node) end)			
-		return node
-	else
-		return self.list:push(func)
-	end	
-end
-
---废弃
-function _event:Remove(func, obj)	
-	for i, v in ilist(self.list) do							
-		if v.func == func and v.obj == obj then
-			if self.lock then
-				table.insert(self.opList, function() self.list:remove(i) end)				
-			else
-				self.list:remove(i)
-			end
-			break
-		end
-	end		
-end
-
 function _event:CreateListener(func, obj)
 	if self.keepSafe then			
 		func = xfunctor(func, obj)
@@ -106,6 +73,30 @@ function _event:CreateListener(func, obj)
 	end	
 	
 	return {value = func, _prev = 0, _next = 0, removed = true}		
+end
+
+function _event:Add(func, obj)
+	assert(func)
+				
+	if self.keepSafe then			
+		self.list:push(xfunctor(func, obj))						
+	else
+		self.list:push(functor(func, obj))
+	end		
+end
+
+function _event:Remove(func, obj)
+	assert(func)
+
+	for i, v in ilist(self.list) do							
+		if v.func == func and v.obj == obj then
+			if self.lock then
+				self.rmList:push({func = func, obj = obj})		
+			else
+				self.list:remove(i)
+			end
+		end
+	end		
 end
 
 function _event:AddListener(handle)	
