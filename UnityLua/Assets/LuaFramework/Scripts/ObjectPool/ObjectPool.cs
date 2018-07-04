@@ -4,37 +4,56 @@ using UnityEngine.Events;
 
 namespace LuaFramework
 {
-    public class ObjectPool<T> where T : class
+    public class ObjectPool<T> where T : class, new()
     {
-        private readonly Stack<T> m_Stack = new Stack<T>();
-        private readonly UnityAction<T> m_ActionOnGet;
-        private readonly UnityAction<T> m_ActionOnRelease;
+        private int maxNum = 5;
+        private bool createWhenIsFull = true;
+        private readonly Queue<T> objects = new Queue<T>();
 
-        public int countAll { get; private set; }
-        public int countActive { get { return countAll - countInactive; } }
-        public int countInactive { get { return m_Stack.Count; } }
 
-        public ObjectPool(UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease)
+        public int Count { get { return objects == null ? 0 : objects.Count; } }
+        public bool IsFull { get { return objects.Count >= maxNum; } }
+
+
+        public ObjectPool()
         {
-            m_ActionOnGet = actionOnGet;
-            m_ActionOnRelease = actionOnRelease;
+            Queue<T> queue = new Queue<T>(maxNum);
+            createWhenIsFull = true;
+        }
+        public ObjectPool(int maxNum, bool createWhenIsFull = true)
+        {
+            Queue<T> queue = new Queue<T>(maxNum);
+            this.maxNum = maxNum;
+            this.createWhenIsFull = createWhenIsFull;
         }
 
         public T Get()
         {
-            T element = m_Stack.Pop();
-            if (m_ActionOnGet != null)
-                m_ActionOnGet(element);
-            return element;
+            if (objects.Count > 0)
+            {
+                T item = objects.Dequeue();
+                if (item != null)
+                    return item;
+            }
+            if (createWhenIsFull)
+            {
+                return new T();
+            }
+            return null;
         }
 
-        public void Release(T element)
+        public void Put(T item)
         {
-            if (m_Stack.Count > 0 && ReferenceEquals(m_Stack.Peek(), element))
-                Debug.LogError("Internal error. Trying to destroy object that is already released to pool.");
-            if (m_ActionOnRelease != null)
-                m_ActionOnRelease(element);
-            m_Stack.Push(element);
+            if (item == null)
+            {
+                Debug.LogError("Trying to release null to pool");
+                return;
+            }
+            if (objects.Count > 0 && ReferenceEquals(objects.Peek(), item))
+                Debug.LogError("Internal error. Trying to destroy object that is already released to pool.");           
+            objects.Enqueue(item);
+            if (objects.Count > maxNum)
+                Debug.LogWarningFormat("Warning! Class {0}'s pool is full.", typeof(T).ToString());
         }
     }
 }

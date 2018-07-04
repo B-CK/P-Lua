@@ -11,38 +11,38 @@ namespace LuaFramework
     /// </summary>
     public class ObjectPoolManager : Manager
     {
-        private Transform m_PoolRootObject = null;
-        private Dictionary<string, object> m_ObjectPools = new Dictionary<string, object>();
-        private Dictionary<string, GameObjectPool> m_GameObjectPools = new Dictionary<string, GameObjectPool>();
+        private Transform poolRootObject = null;
+        private Dictionary<string, object> objectPools = new Dictionary<string, object>();
+        private Dictionary<string, GameObjectPool> gameObjectPools = new Dictionary<string, GameObjectPool>();
 
         Transform PoolRootObject
         {
             get
             {
-                if (m_PoolRootObject == null)
+                if (poolRootObject == null)
                 {
                     var objectPool = new GameObject("ObjectPool");
                     objectPool.transform.SetParent(transform);
                     objectPool.transform.localScale = Vector3.one;
                     objectPool.transform.localPosition = Vector3.zero;
-                    m_PoolRootObject = objectPool.transform;
+                    poolRootObject = objectPool.transform;
                 }
-                return m_PoolRootObject;
+                return poolRootObject;
             }
         }
 
         public GameObjectPool CreatePool(string poolName, GameObject prefab, int maxSize = 5)
         {
             var pool = new GameObjectPool(poolName, prefab, maxSize, PoolRootObject);
-            m_GameObjectPools[poolName] = pool;
+            gameObjectPools[poolName] = pool;
             return pool;
         }
 
         public GameObjectPool GetPool(string poolName)
         {
-            if (m_GameObjectPools.ContainsKey(poolName))
+            if (gameObjectPools.ContainsKey(poolName))
             {
-                return m_GameObjectPools[poolName];
+                return gameObjectPools[poolName];
             }
             return null;
         }
@@ -50,9 +50,9 @@ namespace LuaFramework
         public GameObject Get(string poolName)
         {
             GameObject result = null;
-            if (m_GameObjectPools.ContainsKey(poolName))
+            if (gameObjectPools.ContainsKey(poolName))
             {
-                GameObjectPool pool = m_GameObjectPools[poolName];
+                GameObjectPool pool = gameObjectPools[poolName];
                 result = pool.Get();
                 if (result == null)
                 {
@@ -68,9 +68,9 @@ namespace LuaFramework
 
         public void Release(string poolName, GameObject go)
         {
-            if (m_GameObjectPools.ContainsKey(poolName))
+            if (gameObjectPools.ContainsKey(poolName))
             {
-                GameObjectPool pool = m_GameObjectPools[poolName];
+                GameObjectPool pool = gameObjectPools[poolName];
                 pool.Put(poolName, go);
             }
             else
@@ -81,26 +81,26 @@ namespace LuaFramework
 
         ///-----------------------------------------------------------------------------------------------
 
-        public ObjectPool<T> CreatePool<T>(UnityAction<T> actionOnGet, UnityAction<T> actionOnRelease) where T : class
+        public ObjectPool<T> CreatePool<T>(int maxNum, bool createWhenIsFull) where T : class, new()
         {
             var type = typeof(T);
-            var pool = new ObjectPool<T>(actionOnGet, actionOnRelease);
-            m_ObjectPools[type.Name] = pool;
+            var pool = new ObjectPool<T>(maxNum, createWhenIsFull);
+            objectPools[type.Name] = pool;
             return pool;
         }
 
-        public ObjectPool<T> GetPool<T>() where T : class
+        public ObjectPool<T> GetPool<T>() where T : class, new()
         {
             var type = typeof(T);
             ObjectPool<T> pool = null;
-            if (m_ObjectPools.ContainsKey(type.Name))
+            if (objectPools.ContainsKey(type.Name))
             {
-                pool = m_ObjectPools[type.Name] as ObjectPool<T>;
+                pool = objectPools[type.Name] as ObjectPool<T>;
             }
             return pool;
         }
 
-        public T Get<T>() where T : class
+        public T Get<T>() where T : class, new()
         {
             var pool = GetPool<T>();
             if (pool != null)
@@ -110,12 +110,12 @@ namespace LuaFramework
             return default(T);
         }
 
-        public void Release<T>(T obj) where T : class
+        public void Put<T>(T obj) where T : class, new()
         {
             var pool = GetPool<T>();
             if (pool != null)
             {
-                pool.Release(obj);
+                pool.Put(obj);
             }
         }
     }

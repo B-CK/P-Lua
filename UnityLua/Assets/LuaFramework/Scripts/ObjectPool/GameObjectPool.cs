@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace LuaFramework
 {
-    public class GameObjectItem
-    {
-        public GameObject prefab;
-        public float lastUsedTime;
-    }
+    //public class GameObjectItem
+    //{
+    //    public GameObject prefab;
+    //    public float lastUsedTime;
+    //}
 
     public class GameObjectPool
     {
@@ -79,23 +79,23 @@ namespace LuaFramework
 
 
 
-        //定时清理功能
-        private float cleanInterval = -1;
-        private float cacheTime = -1;
+        ////定时清理功能
+        //private float cleanInterval = -1;
+        //private float cacheTime = -1;
 
-        public void OpenCleanFunc(float interval, float cacheTime)
-        {
-            this.cleanInterval = interval;
-            this.cacheTime = cacheTime;
-            //添加到资源管理器中,等待清理
-            //TODO
-        }
-        public void CloseCleanFunc()
-        {
-            this.cleanInterval = -1;
-            this.cacheTime = -1;
-            //移除清理功能
-            //TODO
-        }
+        //public void OpenCleanFunc(float interval, float cacheTime)
+        //{
+        //    this.cleanInterval = interval;
+        //    this.cacheTime = cacheTime;
+        //    //添加到资源管理器中,等待清理
+        //    //TODO
+        //}
+        //public void CloseCleanFunc()
+        //{
+        //    this.cleanInterval = -1;
+        //    this.cacheTime = -1;
+        //    //移除清理功能
+        //    //TODO
+        //}
     }
 }

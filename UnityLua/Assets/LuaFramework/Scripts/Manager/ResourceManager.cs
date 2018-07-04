@@ -240,52 +240,136 @@ namespace LuaFramework {
 }
 #else
 
-using UnityEngine;
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using LuaFramework;
+using UnityEngine;
 using LuaInterface;
-using UObject = UnityEngine.Object;
+using Object = UnityEngine.Object;
 
-namespace LuaFramework {
-    public class ResourceManager : Manager {
-        private string[] m_Variants = { };
-        private AssetBundleManifest manifest;
-        private AssetBundle shared, assetbundle;
-        private Dictionary<string, AssetBundle> bundles;
+namespace LuaFramework
+{
+    enum ResourceLoadType
+    {
+        Default = 0,
+        Persistent = 1 << 0,            // 永驻内存的资源
+        Cache = 1 << 1,                 // Asset需要缓存
 
-        void Awake() {
+        UnLoad = 1 << 4,                // 利用www加载并且处理后是否立即unload
+
+        Immediate = 1 << 5,             // 需要立即加载
+        // 加载方式
+        LoadBundleFromFile = 1 << 6,    // 利用AssetBundle.LoadFromFile加载
+        LoadBundleFromWWW = 1 << 7,     // 利用WWW 异步加载 AssetBundle
+        ReturnAssetBundle = 1 << 8,     // 返回scene AssetBundle
+    }
+    class CacheObject
+    {
+        public Object obj;
+        public float lasUseTime;
+    }
+    class AssetLoadTask
+    {
+        public uint id;
+        public List<uint> parentTaskIds;
+        public int loadType;
+        public string path;
+        public Action<Object> actions;
+        public List<string> dependencies;
+        public int loadedDependenciesCount = 0;
+        public void Reset()
+        {
+            id = 0;
+            parentTaskIds = null;
+            path = string.Empty;
+            actions = null;
+            dependencies = null;
+            loadedDependenciesCount = 0;
         }
+    }
+    class LoadTask
+    {
+        public AssetLoadTask task;
+        public AssetBundle bundle;
+    }
+
+    public class ResourceManager : Manager
+    {
+        //资源存储策略
+        private Dictionary<string, Object> persistantBundles = new Dictionary<string, Object>();
+        private Dictionary<string, CacheObject> cacheBundles = new Dictionary<string, CacheObject>();
+
+        //加载任务
+        private Dictionary<string, AssetLoadTask> loadingFiles = new Dictionary<string, AssetLoadTask>();
+        private Dictionary<uint, LoadTask> loadingTasks = new Dictionary<uint, LoadTask>();
+        private ObjectPool<AssetLoadTask> assetLoadTaskPool = new ObjectPool<AssetLoadTask>();
+        private Queue<AssetLoadTask> delayAssetLoadTask = new Queue<AssetLoadTask>();
+        private ObjectPool<LoadTask> loadTaskPool = new ObjectPool<LoadTask>();
+        private Queue<LoadTask> delayLoadTask = new Queue<LoadTask>();
+
+        private bool canStartCleanMemeory = true;
+        private float cleanupMemoryLastTime;
+        private float cleanupCacheBundleLastTime;
+        private float cleanupDependenciesLastTime;
+
+        private List<string> preloadList = new List<string>();
+        private AssetBundleManifest manifest;
+
+        private Dictionary<string, int> refCount = new Dictionary<string, int>();
+        private Dictionary<string, float> refDelTime = new Dictionary<string, float>();
+        private const int defaultMaxTaskCount = 10;
+        private int currentTaskCount = 0;
+
+        public int MaxTaskCount { get; set; }
 
         /// <summary>
         /// 初始化
         /// </summary>
-        public void Initialize() {
+        public void Initialize()
+        {
             byte[] stream = null;
             string uri = string.Empty;
-            bundles = new Dictionary<string, AssetBundle>();
             uri = Util.DataPath + AppConst.AssetDir;
             if (!File.Exists(uri)) return;
             stream = File.ReadAllBytes(uri);
             assetbundle = AssetBundle.LoadFromMemory(stream);
             manifest = assetbundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            //获取预加载资源列表
+            //加载预加载资源
         }
+
+
+
+
+        //********************************************
+        private string[] m_Variants = { };
+        private AssetBundle shared, assetbundle;
+        private Dictionary<string, AssetBundle> bundles;
+
+        void Awake()
+        {
+        }
+
+       
 
         /// <summary>
         /// 载入素材
         /// </summary>
-        public T LoadAsset<T>(string abname, string assetname) where T : UnityEngine.Object {
+        public T LoadAsset<T>(string abname, string assetname) where T : UnityEngine.Object
+        {
             abname = abname.ToLower();
             AssetBundle bundle = LoadAssetBundle(abname);
             return bundle.LoadAsset<T>(assetname);
         }
 
-        public void LoadPrefab(string abName, string[] assetNames, LuaFunction func) {
+        public void LoadPrefab(string abName, string[] assetNames, LuaFunction func)
+        {
             abName = abName.ToLower();
-            List<UObject> result = new List<UObject>();
-            for (int i = 0; i < assetNames.Length; i++) {
-                UObject go = LoadAsset<UObject>(abName, assetNames[i]);
+            List<Object> result = new List<Object>();
+            for (int i = 0; i < assetNames.Length; i++)
+            {
+                Object go = LoadAsset<Object>(abName, assetNames[i]);
                 if (go != null) result.Add(go);
             }
             if (func != null) func.Call((object)result.ToArray());
@@ -296,12 +380,15 @@ namespace LuaFramework {
         /// </summary>
         /// <param name="abname"></param>
         /// <returns></returns>
-        public AssetBundle LoadAssetBundle(string abname) {
-            if (!abname.EndsWith(AppConst.ExtName)) {
+        public AssetBundle LoadAssetBundle(string abname)
+        {
+            if (!abname.EndsWith(AppConst.ExtName))
+            {
                 abname += AppConst.ExtName;
             }
             AssetBundle bundle = null;
-            if (!bundles.ContainsKey(abname)) {
+            if (!bundles.ContainsKey(abname))
+            {
                 byte[] stream = null;
                 string uri = Util.DataPath + abname;
                 Debug.LogWarning("LoadFile::>> " + uri);
@@ -310,7 +397,9 @@ namespace LuaFramework {
                 stream = File.ReadAllBytes(uri);
                 bundle = AssetBundle.LoadFromMemory(stream); //关联数据的素材绑定
                 bundles.Add(abname, bundle);
-            } else {
+            }
+            else
+            {
                 bundles.TryGetValue(abname, out bundle);
             }
             return bundle;
@@ -320,8 +409,10 @@ namespace LuaFramework {
         /// 载入依赖
         /// </summary>
         /// <param name="name"></param>
-        void LoadDependencies(string name) {
-            if (manifest == null) {
+        void LoadDependencies(string name)
+        {
+            if (manifest == null)
+            {
                 Debug.LogError("Please initialize AssetBundleManifest by calling AssetBundleManager.Initialize()");
                 return;
             }
@@ -333,13 +424,15 @@ namespace LuaFramework {
                 dependencies[i] = RemapVariantName(dependencies[i]);
 
             // Record and load all dependencies.
-            for (int i = 0; i < dependencies.Length; i++) {
+            for (int i = 0; i < dependencies.Length; i++)
+            {
                 LoadAssetBundle(dependencies[i]);
             }
         }
 
         // Remaps the asset bundle name to the best fitting asset bundle variant.
-        string RemapVariantName(string assetBundleName) {
+        string RemapVariantName(string assetBundleName)
+        {
             string[] bundlesWithVariant = manifest.GetAllAssetBundlesWithVariant();
 
             // If the asset bundle doesn't have variant, simply return.
@@ -351,13 +444,15 @@ namespace LuaFramework {
             int bestFit = int.MaxValue;
             int bestFitIndex = -1;
             // Loop all the assetBundles with variant to find the best fit variant assetBundle.
-            for (int i = 0; i < bundlesWithVariant.Length; i++) {
+            for (int i = 0; i < bundlesWithVariant.Length; i++)
+            {
                 string[] curSplit = bundlesWithVariant[i].Split('.');
                 if (curSplit[0] != split[0])
                     continue;
 
                 int found = System.Array.IndexOf(m_Variants, curSplit[1]);
-                if (found != -1 && found < bestFit) {
+                if (found != -1 && found < bestFit)
+                {
                     bestFit = found;
                     bestFitIndex = i;
                 }
@@ -371,11 +466,13 @@ namespace LuaFramework {
         /// <summary>
         /// 销毁资源
         /// </summary>
-        void OnDestroy() {
+        void OnDestroy()
+        {
             if (shared != null) shared.Unload(true);
             if (manifest != null) manifest = null;
             Debug.Log("~ResourceManager was destroy!");
         }
+
     }
 }
 #endif
