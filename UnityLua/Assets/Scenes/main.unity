@@ -292,7 +292,6 @@ GameObject:
   - component: {fileID: 1101727798}
   - component: {fileID: 1101727797}
   - component: {fileID: 1101727796}
-  - component: {fileID: 1101727795}
   - component: {fileID: 1101727794}
   m_Layer: 0
   m_Name: GuiCamera
@@ -303,13 +302,6 @@ GameObject:
   m_IsActive: 1
 --- !u!81 &1101727794
 AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1101727793}
-  m_Enabled: 1
---- !u!92 &1101727795
-Behaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}

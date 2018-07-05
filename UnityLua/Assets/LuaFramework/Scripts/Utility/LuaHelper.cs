@@ -22,12 +22,12 @@ namespace LuaFramework {
             return t;
         }
 
-        /// <summary>
-        /// 面板管理器
-        /// </summary>
-        public static PanelManager GetPanelManager() {
-            return AppFacade.Instance.GetManager<PanelManager>(ManagerName.Panel);
-        }
+        ///// <summary>
+        ///// 面板管理器
+        ///// </summary>
+        //public static PanelManager GetPanelManager() {
+        //    return AppFacade.Instance.GetManager<PanelManager>(ManagerName.Panel);
+        //}
 
         /// <summary>
         /// 资源管理器

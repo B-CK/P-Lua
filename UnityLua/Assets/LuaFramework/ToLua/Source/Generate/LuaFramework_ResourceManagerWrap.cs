@@ -8,10 +8,18 @@ public class LuaFramework_ResourceManagerWrap
 	{
 		L.BeginClass(typeof(LuaFramework.ResourceManager), typeof(Manager));
 		L.RegFunction("Initialize", Initialize);
+		L.RegFunction("IsLoading", IsLoading);
+		L.RegFunction("RemoveTask", RemoveTask);
+		L.RegFunction("AddTask", AddTask);
+		L.RegFunction("CleanupMemoryInterval", CleanupMemoryInterval);
+		L.RegFunction("CleanupMemoryNow", CleanupMemoryNow);
+		L.RegFunction("CleanupDependenciesInterval", CleanupDependenciesInterval);
+		L.RegFunction("CleanupDependenciesNow", CleanupDependenciesNow);
 		L.RegFunction("LoadPrefab", LoadPrefab);
 		L.RegFunction("LoadAssetBundle", LoadAssetBundle);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("MaxTaskCount", get_MaxTaskCount, set_MaxTaskCount);
 		L.EndClass();
 	}
 
@@ -23,6 +31,143 @@ public class LuaFramework_ResourceManagerWrap
 			ToLua.CheckArgsCount(L, 1);
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 			obj.Initialize();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int IsLoading(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 2);
+			bool o = obj.IsLoading(arg0);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RemoveTask(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 2);
+			System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.CheckDelegate<System.Action<UnityEngine.Object>>(L, 3);
+			obj.RemoveTask(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddTask(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 3)
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.CheckDelegate<System.Action<UnityEngine.Object>>(L, 3);
+				uint o = obj.AddTask(arg0, arg1);
+				LuaDLL.lua_pushnumber(L, o);
+				return 1;
+			}
+			else if (count == 4)
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.CheckDelegate<System.Action<UnityEngine.Object>>(L, 3);
+				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				uint o = obj.AddTask(arg0, arg1, arg2);
+				LuaDLL.lua_pushnumber(L, o);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: LuaFramework.ResourceManager.AddTask");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CleanupMemoryInterval(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			obj.CleanupMemoryInterval();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CleanupMemoryNow(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			obj.CleanupMemoryNow();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CleanupDependenciesInterval(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			obj.CleanupDependenciesInterval();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CleanupDependenciesNow(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+			obj.CleanupDependenciesNow();
 			return 0;
 		}
 		catch (Exception e)
@@ -83,6 +228,44 @@ public class LuaFramework_ResourceManagerWrap
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MaxTaskCount(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)o;
+			int ret = obj.MaxTaskCount;
+			LuaDLL.lua_pushinteger(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index MaxTaskCount on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_MaxTaskCount(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)o;
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			obj.MaxTaskCount = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o, "attempt to index MaxTaskCount on a nil value");
 		}
 	}
 }
