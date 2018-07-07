@@ -19,29 +19,33 @@ public partial class ExportResource
         if (selection.Length > 0)
         {
             assetAtlas.Clear();
-            GetAssetsRecursively(atlasAssetFolder, "*.prefab", "ui/atlas/", null, ref assetAtlas);
+            GetAssetsRecursively(atlasAssetFolder, "*.spriteatlas", "ui/atlas/", null, ref assetAtlas);
+            SetAssetBundleName(assetAtlas);
 
             GetUIPrefabAssets();
             var assets = GetSelectedAssets(assetUIs, selection);
 
-            CombineAssets(new Dictionary<string, string>[] { assetAtlas, assetFonts, assetUIs }, ref assets);
-            SetAssetBundleName(assets, new string[] { EXT_SHADER }, SHADER_FOLDER);
+            CombineAssets(new Dictionary<string, string>[] { assetFonts, assetUIs }, ref assets);
             SetAssetBundleName(assets, new string[] { EXT_PNG, EXT_TGA, }, DEPTEX_FOLDER);
+            SetAssetBundleName(assets, new string[] { EXT_SHADER }, SHADER_FOLDER);
             SetAssetBundleName(assets, new string[] { EXT_OGG, EXT_MP3 }, AUDIO_FOLDER);
+
             BuildAssetBundles(target);
         }
     }
     static void ExportAllUIs(BuildTarget target)
     {
         assetAtlas.Clear();
-        GetAssetsRecursively(atlasAssetFolder, "*.prefab", "ui/atlas/", null, ref assetAtlas);
+        GetAssetsRecursively(atlasAssetFolder, "*.spriteatlas", "ui/atlas/", null, ref assetAtlas);
+        SetAssetBundleName(assetAtlas);
 
         GetUIPrefabAssets();
 
-        CombineAssets(new Dictionary<string, string>[] { assetAtlas, assetFonts }, ref assetUIs);
+        CombineAssets(new Dictionary<string, string>[] { assetFonts }, ref assetUIs);
+        SetAssetBundleName(assetUIs, new string[] { EXT_PNG, EXT_TGA, }, DEPTEX_FOLDER);        
         SetAssetBundleName(assetUIs, new string[] { EXT_SHADER }, SHADER_FOLDER);
-        SetAssetBundleName(assetUIs, new string[] { EXT_PNG, EXT_TGA, }, DEPTEX_FOLDER);
         SetAssetBundleName(assetUIs, new string[] { EXT_OGG, EXT_MP3 }, AUDIO_FOLDER);
+
         BuildAssetBundles(target);
     }
     static void GetUIPrefabAssets()

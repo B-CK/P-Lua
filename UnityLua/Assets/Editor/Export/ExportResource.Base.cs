@@ -13,7 +13,7 @@ public partial class ExportResource
 
     const string UI_FOLDER = "ui/";
     const string SHADER_FOLDER = "shaders/";
-    const string DEPTEX_FOLDER = "deptexture/t_";
+    const string DEPTEX_FOLDER = "texture/t_";
     const string AUDIO_FOLDER = "audio/a_";
 
     static BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle
@@ -33,11 +33,11 @@ public partial class ExportResource
                 platformPath = "Dist/Android";
                 break;
             case BuildTarget.iOS:
-                platformPath = "Dist/Ios";
+                platformPath = "Dist/IOS";
                 break;
             default:
                 {
-                    platformPath = "GameWindows";
+                    platformPath = "Windows";
                 }
                 break;
         }
@@ -71,18 +71,7 @@ public partial class ExportResource
     /// <returns></returns>
     public static string GetBundleSaveDir(BuildTarget target)
     {
-        string path;
-        switch (target)
-        {
-            case BuildTarget.Android:
-            case BuildTarget.iOS:
-                path = string.Format("{0}/../../{1}/", Application.dataPath, GetPlatfomrPath(target));
-                break;
-            default:
-                path = string.Format("{0}/../../{1}/Data/", Application.dataPath, GetPlatfomrPath(target));
-                break;
-        }
-        return path;
+        return string.Format("{0}/../../{1}/", Application.dataPath, GetPlatfomrPath(target));
     }
 
     /// <summary>
@@ -218,7 +207,7 @@ public partial class ExportResource
         if (!Directory.Exists(searchFolder))
             return;
 
-        string suffix = ".bundle";
+        string suffix = "bundle";
         string srcDir = searchFolder;
         string[] files = Directory.GetFiles(srcDir, searchPattern);
         foreach (string oneFile in files)

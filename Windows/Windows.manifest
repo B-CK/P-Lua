@@ -1,0 +1,14 @@
+ManifestFileVersion: 0
+CRC: 1386729379
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: ui/atlas/basesprite.bundle
+      Dependencies: {}
+    Info_1:
+      Name: texture/t_texture_activity_03.bundle
+      Dependencies: {}
+    Info_2:
+      Name: ui/panelmain.bundle
+      Dependencies:
+        Dependency_0: texture/t_texture_activity_03.bundle

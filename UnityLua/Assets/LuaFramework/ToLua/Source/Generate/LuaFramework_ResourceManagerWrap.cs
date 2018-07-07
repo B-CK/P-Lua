@@ -15,8 +15,6 @@ public class LuaFramework_ResourceManagerWrap
 		L.RegFunction("CleanupMemoryNow", CleanupMemoryNow);
 		L.RegFunction("CleanupDependenciesInterval", CleanupDependenciesInterval);
 		L.RegFunction("CleanupDependenciesNow", CleanupDependenciesNow);
-		L.RegFunction("LoadPrefab", LoadPrefab);
-		L.RegFunction("LoadAssetBundle", LoadAssetBundle);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("MaxTaskCount", get_MaxTaskCount, set_MaxTaskCount);
@@ -169,43 +167,6 @@ public class LuaFramework_ResourceManagerWrap
 			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 			obj.CleanupDependenciesNow();
 			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LoadPrefab(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 4);
-			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			string[] arg1 = ToLua.CheckStringArray(L, 3);
-			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 4);
-			obj.LoadPrefab(arg0, arg1, arg2);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LoadAssetBundle(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			UnityEngine.AssetBundle o = obj.LoadAssetBundle(arg0);
-			ToLua.PushSealed(L, o);
-			return 1;
 		}
 		catch (Exception e)
 		{
