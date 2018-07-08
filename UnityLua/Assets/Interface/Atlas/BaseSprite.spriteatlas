@@ -30,7 +30,7 @@ SpriteAtlas:
       m_Overridden: 1
       m_AndroidETC2FallbackOverride: 0
     - m_BuildTarget: Standalone
-      m_MaxTextureSize: 1024
+      m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
       m_TextureFormat: 12
       m_TextureCompression: 1
@@ -52,11 +52,13 @@ SpriteAtlas:
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: e197cdc2824445b42be3ebddd05147f8, type: 3}
   - {fileID: 21300000, guid: bd13f8f6691edac46865d806aed6294f, type: 3}
   - {fileID: 21300000, guid: 9cc1836900a22144a84d8f50c6ef421d, type: 3}
   - {fileID: 21300000, guid: bfcc926d901286e47bc4cb1302d4cb55, type: 3}
   - {fileID: 21300000, guid: c483e3362ab2f7448bab68aea2e33493, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Texture_Load_TUT3
   - Button_Common_Disable
   - Button_Common_Pressed
   - Button_Common_Normal

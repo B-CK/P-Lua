@@ -80,21 +80,40 @@ public class LuaFramework_ResourceManagerWrap
 		{
 			int count = LuaDLL.lua_gettop(L);
 
-			if (count == 3)
+			if (count == 3 && TypeChecker.CheckTypes<System.Action<UnityEngine.Object>>(L, 3))
 			{
 				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.CheckDelegate<System.Action<UnityEngine.Object>>(L, 3);
+				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.ToObject(L, 3);
 				uint o = obj.AddTask(arg0, arg1);
 				LuaDLL.lua_pushnumber(L, o);
 				return 1;
 			}
-			else if (count == 4)
+			else if (count == 3 && TypeChecker.CheckTypes<LuaInterface.LuaFunction>(L, 3))
 			{
 				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
 				string arg0 = ToLua.CheckString(L, 2);
-				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.CheckDelegate<System.Action<UnityEngine.Object>>(L, 3);
-				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
+				LuaFunction arg1 = ToLua.ToLuaFunction(L, 3);
+				uint o = obj.AddTask(arg0, arg1);
+				LuaDLL.lua_pushnumber(L, o);
+				return 1;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<LuaInterface.LuaFunction, int>(L, 3))
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				LuaFunction arg1 = ToLua.ToLuaFunction(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
+				uint o = obj.AddTask(arg0, arg1, arg2);
+				LuaDLL.lua_pushnumber(L, o);
+				return 1;
+			}
+			else if (count == 4 && TypeChecker.CheckTypes<System.Action<UnityEngine.Object>, int>(L, 3))
+			{
+				LuaFramework.ResourceManager obj = (LuaFramework.ResourceManager)ToLua.CheckObject<LuaFramework.ResourceManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				System.Action<UnityEngine.Object> arg1 = (System.Action<UnityEngine.Object>)ToLua.ToObject(L, 3);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 4);
 				uint o = obj.AddTask(arg0, arg1, arg2);
 				LuaDLL.lua_pushnumber(L, o);
 				return 1;

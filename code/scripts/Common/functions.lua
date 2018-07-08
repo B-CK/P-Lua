@@ -1,50 +1,129 @@
+local type = type
+local debug = debug
+local print = print
+local pairs = pairs
+local ipairs = ipairs
+local tostring = tostring
+local rep = string.rep
+local format = string.format
+local concat = table.concat
+local insert = table.insert
+local Util = Util
+local Local = Local
+local GameObject = GameObject
 
 --输出日志--
-function log(str)
-    Util.Log(str);
+function Log(str)
+    if not Local.LogManager then
+        return
+    end
+    if Local.LogTraceback then
+        Util.Log(str .. "\r\n" .. debug.traceback());
+    else
+        Util.Log(str);
+    end
 end
 
 --错误日志--
-function logError(str) 
-	Util.LogError(str);
+function LogError(str)
+    if not Local.LogManager then
+        return
+    end
+    Util.LogError(str .. "\r\n" .. debug.traceback());
 end
 
 --警告日志--
-function logWarn(str) 
-	Util.LogWarning(str);
+function LogWarning(str)
+    if not Local.LogManager then
+        return
+    end
+    Util.LogWarning(str);
+end
+
+--输出黄色日志-无格式
+function LogYellow(...)
+    if not Local.LogManager then
+        return
+    end
+    local args = { ... }
+    for k, v in ipairs(args) do
+        args[k] = tostring(v)
+    end
+
+    if Local.LogTraceback then
+        Util.Log("<color=yellow>" .. concat(args, '\t') .. "</color>\t\n" .. debug.traceback());
+    else
+        Util.Log("<color=yellow>" .. concat(args, '\t') .. "</color>\t\n");
+    end
+end
+
+--输出黄色日志
+function PrintYellow(...)
+    if not Local.LogManager then
+        return
+    end
+    local args = { ... }
+    for k, v in ipairs(args) do
+        args[k] = tostring(v)
+    end
+
+    if Local.LogTraceback then
+        print("<color=yellow>" .. concat(args, '\t') .. "</color>\t\n" .. debug.traceback());
+    else
+        print("<color=yellow>" .. concat(args, '\t') .. "</color>\t\n");
+    end
+end
+
+local function DumpTable(t, level)
+    local code = { "{\n" }
+    local tab = rep("\t", level)
+    for k, v in pairs(t) do
+        if type(v) ~= "table" then
+            insert(code, tab .. "\t<color=orange>" .. tostring(k) .. "</color> = " .. tostring(v) .. ",\n")
+        else
+            insert(code, tab .. "\t<color=orange>" .. tostring(k) .. "</color> = " .. DumpTable(v, level + 1) .. ",\n")
+        end
+    end
+    insert(code, tab .. "}")
+    return concat(code)
+end
+
+---@param t table类型
+---@param des table描述信息
+function PrintTable(t, des)
+    if not Local.LogManager then
+        return
+    end
+    if type(t) == "table" then
+        print(format("<color=orange>%s</color>\n%s", des, DumpTable(t, 0)))
+    else
+        print(des .. '\n' .. t)
+    end
 end
 
 --查找对象--
-function find(str)
-	return GameObject.Find(str);
+function FindObj(str)
+    return GameObject.Find(str);
 end
 
-function destroy(obj)
-	GameObject.Destroy(obj);
+function Destroy(obj)
+    GameObject.Destroy(obj);
 end
 
-function newObject(prefab)
-	return GameObject.Instantiate(prefab);
+function NewObject(prefab)
+    return GameObject.Instantiate(prefab);
 end
 
 --创建面板--
-function createPanel(name)
-	PanelManager:CreatePanel(name);
+function CreatePanel(name)
+    --PanelManager:CreatePanel(name);
 end
 
-function child(str)
-	return transform:FindChild(str);
-end
-
-function subGet(childNode, typeName)		
-	return child(childNode):GetComponent(typeName);
-end
-
-function findPanel(str) 
-	local obj = find(str);
-	if obj == nil then
-		error(str.." is null");
-		return nil;
-	end
-	return obj:GetComponent("BaseLua");
+function FindPanel(str)
+    local obj = FindObj(str);
+    if obj == nil then
+        error(str .. " is null");
+        return nil;
+    end
+    return obj:GetComponent("BaseLua");
 end

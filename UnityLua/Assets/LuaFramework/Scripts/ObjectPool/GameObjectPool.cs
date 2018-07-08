@@ -27,7 +27,7 @@ namespace LuaFramework
             this.poolRoot = pool;
             this.poolObjectPrefab = poolObjectPrefab;
         }
-
+        public int Count { get { return availableObjStack == null ? 0 : availableObjStack.Count; } }
         public void SetDefaultCount(int count)
         {
             for (int i = 0; i < count; i++)
@@ -35,21 +35,6 @@ namespace LuaFramework
                 AddObjectToPool(NewObjectInstance());
             }
         }
-
-        //o(1)
-        private void AddObjectToPool(GameObject go)
-        {
-            //add to pool
-            go.SetActive(false);
-            availableObjStack.Push(go);
-            go.transform.SetParent(poolRoot, false);
-        }
-
-        private GameObject NewObjectInstance()
-        {
-            return GameObject.Instantiate(poolObjectPrefab) as GameObject;
-        }
-
         public GameObject Get()
         {
             GameObject go = null;
@@ -76,6 +61,21 @@ namespace LuaFramework
                 Debug.LogError(string.Format("Trying to add object to incorrect pool {0} ", poolName));
             }
         }
+        //o(1)
+        private void AddObjectToPool(GameObject go)
+        {
+            //add to pool
+            go.SetActive(false);
+            availableObjStack.Push(go);
+            go.transform.SetParent(poolRoot, true);
+        }
+
+        private GameObject NewObjectInstance()
+        {
+            return GameObject.Instantiate(poolObjectPrefab) as GameObject;
+        }
+
+
 
 
 

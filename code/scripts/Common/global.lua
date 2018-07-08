@@ -4,17 +4,17 @@ LuaHelper = LuaFramework.LuaHelper;
 ByteBuffer = LuaFramework.ByteBuffer;
 
 ResMgr = LuaHelper.GetResManager();
-PanelMgr = LuaHelper.GetPanelManager();
 SoundMgr = LuaHelper.GetSoundManager();
 NetworkMgr = LuaHelper.GetNetManager();
 
 WWW = UnityEngine.WWW;
 GameObject = UnityEngine.GameObject;
 
-require "Common.define"
+require "Common.Define"
+Local = require "Common.Local"
 
-Class = require "Common.class"
-LuaUtils = require "Common.utils"
+Class = require "Common.Class"
+LuaUtils = require "Common.Utils"
 CfgMgr = require "Cfg.CfgManager"
 
 local _, err = LuaUtils.my_xpcall(CfgMgr.init)

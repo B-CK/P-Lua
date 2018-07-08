@@ -1,7 +1,7 @@
 
-require "Common/define"
-require "Common/protocal"
-require "Common/functions"
+require "Define"
+require "Protocal"
+require "Functions"
 Event = require 'events'
 
 require "3rd/pblua/login_pb"
@@ -19,7 +19,7 @@ local gameObject;
 local islogging = false;
 
 function Network.Start() 
-    logWarn("Network.Start!!");
+    LogWarning("Network.Start!!");
     Event.AddListener(Protocal.Connect, this.OnConnect); 
     Event.AddListener(Protocal.Message, this.OnMessage); 
     Event.AddListener(Protocal.Exception, this.OnException); 
@@ -33,20 +33,20 @@ end
 
 --当连接建立时--
 function Network.OnConnect() 
-    logWarn("Game Server connected!!");
+    LogWarning("Game Server connected!!");
 end
 
 --异常断线--
 function Network.OnException() 
     islogging = false; 
     NetManager:SendConnect();
-   	logError("OnException------->>>>");
+   	LogError("OnException------->>>>");
 end
 
 --连接中断，或者被踢掉--
 function Network.OnDisconnect() 
     islogging = false; 
-    logError("OnDisconnect------->>>>");
+    LogError("OnDisconnect------->>>>");
 end
 
 --登录返回--
@@ -68,14 +68,14 @@ function Network.OnMessage(buffer)
     if ctrl ~= nil then
         ctrl:Awake();
     end
-    logWarn('OnMessage-------->>>');
+    LogWarning('OnMessage-------->>>');
 end
 
 --二进制登录--
 function Network.TestLoginBinary(buffer)
 	local protocal = buffer:ReadByte();
 	local str = buffer:ReadString();
-	log('TestLoginBinary: protocal:>'..protocal..' str:>'..str);
+	Log('TestLoginBinary: protocal:>'..protocal..' str:>'..str);
 end
 
 --PBLUA登录--
@@ -85,7 +85,7 @@ function Network.TestLoginPblua(buffer)
 
     local msg = login_pb.LoginResponse();
     msg:ParseFromString(data);
-	log('TestLoginPblua: protocal:>'..protocal..' msg:>'..msg.id);
+	Log('TestLoginPblua: protocal:>'..protocal..' msg:>'..msg.id);
 end
 
 --PBC登录--
@@ -106,7 +106,7 @@ function Network.TestLoginPbc(buffer)
     for _,v in ipairs(decode.phone) do
         print("\t"..v.number, v.type)
     end
-	log('TestLoginPbc: protocal:>'..protocal);
+	Log('TestLoginPbc: protocal:>'..protocal);
 end
 
 --SPROTO登录--
@@ -135,7 +135,7 @@ function Network.TestLoginSproto(buffer)
     ]]
     local addr = sp:decode("AddressBook", code)
     print_r(addr)
-	log('TestLoginSproto: protocal:>'..protocal);
+	Log('TestLoginSproto: protocal:>'..protocal);
 end
 
 --卸载网络监听--
@@ -144,5 +144,5 @@ function Network.Unload()
     Event.RemoveListener(Protocal.Message);
     Event.RemoveListener(Protocal.Exception);
     Event.RemoveListener(Protocal.Disconnect);
-    logWarn('Unload Network...');
+    LogWarning('Unload Network...');
 end

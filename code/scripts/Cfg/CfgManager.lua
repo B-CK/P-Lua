@@ -1,16 +1,17 @@
-CfgManager = {}
-
 local allCfgs = nil
 
-function CfgManager.init()
+local function init()
     allCfgs = require "Cfg.Config"
 end
 
-function CfgManager.GetConfig(cfgName)
+local function GetConfig(cfgName)
     if allCfgs then
         return allCfgs[cfgName]
     end
     return nil
 end
 
-return CfgManager
+return {
+    init,
+    GetConfig,
+}

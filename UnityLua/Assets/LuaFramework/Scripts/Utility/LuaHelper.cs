@@ -50,7 +50,6 @@ namespace LuaFramework {
             return AppFacade.Instance.GetManager<SoundManager>(ManagerName.Sound);
         }
 
-
         /// <summary>
         /// pbc/pblua函数回调
         /// </summary>
