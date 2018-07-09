@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2696221087
+CRC: 656264258
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -9,6 +9,6 @@ AssetBundleManifest:
       Name: texture/t_texture_activity_03.bundle
       Dependencies: {}
     Info_2:
-      Name: ui/panelmain.bundle
+      Name: ui/dlgmain.bundle
       Dependencies:
         Dependency_0: texture/t_texture_activity_03.bundle

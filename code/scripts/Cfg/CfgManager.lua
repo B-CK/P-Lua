@@ -12,6 +12,6 @@ local function GetConfig(cfgName)
 end
 
 return {
-    init,
-    GetConfig,
+    init = init,
+    GetConfig = GetConfig,
 }

@@ -1,7 +1,7 @@
 
-require "Define"
-require "Protocal"
-require "Functions"
+require "Common.Define"
+require "Common.Protocal"
+require "Common.Functions"
 Event = require 'events'
 
 require "3rd/pblua/login_pb"

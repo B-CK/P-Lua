@@ -8,6 +8,7 @@ using UnityEditor;
 using BindType = ToLuaMenu.BindType;
 using UnityEngine.UI;
 using System.Reflection;
+using UnityEngine.EventSystems;
 
 public static class CustomSettings
 {
@@ -15,13 +16,13 @@ public static class CustomSettings
     public static string saveDir = FrameworkPath + "/ToLua/Source/Generate/";
     public static string luaDir = FrameworkPath + "/Lua/";
     public static string toluaBaseType = FrameworkPath + "/ToLua/BaseType/";
-	public static string baseLuaDir = FrameworkPath + "/ToLua/Lua";
-	public static string injectionFilesPath = Application.dataPath + "/ToLua/Injection/";
+    public static string baseLuaDir = FrameworkPath + "/ToLua/Lua";
+    public static string injectionFilesPath = Application.dataPath + "/ToLua/Injection/";
 
     //导出时强制做为静态类的类型(注意customTypeList 还要添加这个类型才能导出)
     //unity 有些类作为sealed class, 其实完全等价于静态类
     public static List<Type> staticClassTypes = new List<Type>
-    {        
+    {
         typeof(UnityEngine.Application),
         typeof(UnityEngine.Time),
         typeof(UnityEngine.Screen),
@@ -36,9 +37,9 @@ public static class CustomSettings
     };
 
     //附加导出委托类型(在导出委托时, customTypeList 中牵扯的委托类型都会导出， 无需写在这里)
-    public static DelegateType[] customDelegateList = 
-    {        
-        _DT(typeof(Action)),                
+    public static DelegateType[] customDelegateList =
+    {
+        _DT(typeof(Action)),
         _DT(typeof(UnityEngine.Events.UnityAction)),
         _DT(typeof(System.Predicate<int>)),
         _DT(typeof(System.Action<int>)),
@@ -97,24 +98,24 @@ public static class CustomSettings
 #endif
       
         _GT(typeof(Behaviour)),
-        _GT(typeof(MonoBehaviour)),        
+        _GT(typeof(MonoBehaviour)),
         _GT(typeof(GameObject)),
         _GT(typeof(TrackedReference)),
         _GT(typeof(Application)),
         _GT(typeof(Physics)),
         _GT(typeof(Collider)),
-        _GT(typeof(Time)),        
+        _GT(typeof(Time)),
         _GT(typeof(Texture)),
         _GT(typeof(Texture2D)),
-        _GT(typeof(Shader)),        
+        _GT(typeof(Shader)),
         _GT(typeof(Renderer)),
         _GT(typeof(WWW)),
-        _GT(typeof(Screen)),        
+        _GT(typeof(Screen)),
         _GT(typeof(CameraClearFlags)),
-        _GT(typeof(AudioClip)),        
+        _GT(typeof(AudioClip)),
         _GT(typeof(AssetBundle)),
         _GT(typeof(ParticleSystem)),
-        _GT(typeof(AsyncOperation)).SetBaseType(typeof(System.Object)),        
+        _GT(typeof(AsyncOperation)).SetBaseType(typeof(System.Object)),
         _GT(typeof(LightType)),
         _GT(typeof(SleepTimeout)),
 #if UNITY_5_3_OR_NEWER && !UNITY_5_6_OR_NEWER
@@ -124,8 +125,8 @@ public static class CustomSettings
         _GT(typeof(Input)),
         _GT(typeof(KeyCode)),
         _GT(typeof(SkinnedMeshRenderer)),
-        _GT(typeof(Space)),      
-       
+        _GT(typeof(Space)),
+
 
         _GT(typeof(MeshRenderer)),
 #if !UNITY_5_4_OR_NEWER
@@ -134,30 +135,40 @@ public static class CustomSettings
         _GT(typeof(ParticleAnimator)), 
 #endif
 
+
         _GT(typeof(BoxCollider)),
         _GT(typeof(MeshCollider)),
-        _GT(typeof(SphereCollider)),        
+        _GT(typeof(SphereCollider)),
         _GT(typeof(CharacterController)),
         _GT(typeof(CapsuleCollider)),
-        
-        _GT(typeof(Animation)),        
-        _GT(typeof(AnimationClip)).SetBaseType(typeof(UnityEngine.Object)),        
+
+        _GT(typeof(Animation)),
+        _GT(typeof(AnimationClip)).SetBaseType(typeof(UnityEngine.Object)),
         _GT(typeof(AnimationState)),
         _GT(typeof(AnimationBlendMode)),
-        _GT(typeof(QueueMode)),  
+        _GT(typeof(QueueMode)),
         _GT(typeof(PlayMode)),
         _GT(typeof(WrapMode)),
 
         _GT(typeof(QualitySettings)),
-        _GT(typeof(RenderSettings)),                                                   
-        _GT(typeof(BlendWeights)),           
-        _GT(typeof(RenderTexture)), 
-		_GT(typeof(Resources)),      
-		_GT(typeof(LuaProfiler)),
+        _GT(typeof(RenderSettings)),
+        _GT(typeof(BlendWeights)),
+        _GT(typeof(RenderTexture)),
+        _GT(typeof(Resources)),
+        _GT(typeof(LuaProfiler)),
           
         //for LuaFramework
         _GT(typeof(RectTransform)),
         _GT(typeof(Text)),
+        _GT(typeof(Image)),
+        _GT(typeof(Button)),
+        _GT(typeof(RawImage)),
+
+        _GT(typeof(EventTrigger)),
+        _GT(typeof(BaseEventData)),
+        _GT(typeof(AxisEventData)),
+        _GT(typeof(PointerEventData)),
+        _GT(typeof(EventTriggerType)),
 
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),
@@ -167,12 +178,11 @@ public static class CustomSettings
 
         _GT(typeof(GameManager)),
         _GT(typeof(LuaManager)),
-        //_GT(typeof(PanelManager)),
         _GT(typeof(SoundManager)),
         _GT(typeof(TimerManager)),
         _GT(typeof(ThreadManager)),
         _GT(typeof(NetworkManager)),
-        _GT(typeof(ResourceManager)),		  
+        _GT(typeof(ResourceManager)),
     };
 
     public static List<Type> dynamicList = new List<Type>()
@@ -203,9 +213,9 @@ public static class CustomSettings
     //使用方法参见例子14
     public static List<Type> outList = new List<Type>()
     {
-        
+
     };
-        
+
     //ngui优化，下面的类没有派生类，可以作为sealed class
     public static List<Type> sealedList = new List<Type>()
     {
@@ -255,7 +265,7 @@ public static class CustomSettings
     public static DelegateType _DT(Type t)
     {
         return new DelegateType(t);
-    }    
+    }
 
 
     [MenuItem("Lua/Attach Profiler", false, 151)]
@@ -274,7 +284,7 @@ public static class CustomSettings
     static void DetachProfiler()
     {
         if (!Application.isPlaying)
-        {            
+        {
             return;
         }
 

@@ -13,6 +13,7 @@ public class LuaFramework_LuaHelperWrap
 		L.RegFunction("GetSoundManager", GetSoundManager);
 		L.RegFunction("OnCallLuaFunc", OnCallLuaFunc);
 		L.RegFunction("OnJsonCallFunc", OnJsonCallFunc);
+		L.RegFunction("AddEventTrigger", AddEventTrigger);
 		L.EndStaticLibs();
 	}
 
@@ -107,6 +108,24 @@ public class LuaFramework_LuaHelperWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 2);
 			LuaFramework.LuaHelper.OnJsonCallFunc(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddEventTrigger(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 1, typeof(UnityEngine.GameObject));
+			UnityEngine.EventSystems.EventTriggerType arg1 = (UnityEngine.EventSystems.EventTriggerType)ToLua.CheckObject(L, 2, typeof(UnityEngine.EventSystems.EventTriggerType));
+			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 3);
+			LuaFramework.LuaHelper.AddEventTrigger(arg0, arg1, arg2);
 			return 0;
 		}
 		catch (Exception e)

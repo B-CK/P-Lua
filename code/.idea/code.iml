@@ -8,7 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="UnityEngine" level="project" />
     <orderEntry type="library" name="Assembly-CSharp" level="project" />
+    <orderEntry type="library" name="UnityEngine" level="project" />
+    <orderEntry type="library" name="UnityEngine.UI" level="project" />
   </component>
 </module>

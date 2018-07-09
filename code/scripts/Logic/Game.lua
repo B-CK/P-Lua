@@ -30,4 +30,10 @@ function Game.test_function()
                   ['apr'] = 4 }
     tbl.go = game
     PrintTable(tbl, "表格数据信息")
+    --local img = FindObj("Canvas/GuiCamera/Image")
+    -----@type UnityEngine.EventSystems.EventTriggerType
+    --local evtType = UnityEngine.EventSystems.EventTriggerType
+    --LuaHelper.AddEventTrigger(img, evtType.PointerClick, function (data)
+    --    PrintYellow(data)
+    --end)
 end

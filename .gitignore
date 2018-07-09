@@ -24,8 +24,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-metadata/
-Library/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -264,3 +262,4 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+UnityLua/Library/metadata/02/02eac0e9b38d33c448fabddf06f08ea6
