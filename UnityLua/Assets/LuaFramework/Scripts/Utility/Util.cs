@@ -242,6 +242,19 @@ namespace LuaFramework
             }
         }
 
+        /// <summary>
+        /// lua脚本目录,不包含底层脚本
+        /// </summary>
+        public static string ScriptPath
+        {
+            get
+            {
+                if (AppConst.DebugMode)
+                    return LuaConst.luaDir + "/";
+                return LuaConst.luaResDir + "script/";
+            }
+        }
+
         public static string GetRelativePath()
         {
             if (Application.isEditor)

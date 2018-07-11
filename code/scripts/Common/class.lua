@@ -1,6 +1,6 @@
 local setmetatable = setmetatable
 
-Class = {}
+local Class = {}
 
 function Class:new(super)
 	local class = {}

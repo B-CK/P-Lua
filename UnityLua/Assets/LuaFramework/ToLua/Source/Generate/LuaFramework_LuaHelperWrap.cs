@@ -13,7 +13,11 @@ public class LuaFramework_LuaHelperWrap
 		L.RegFunction("GetSoundManager", GetSoundManager);
 		L.RegFunction("OnCallLuaFunc", OnCallLuaFunc);
 		L.RegFunction("OnJsonCallFunc", OnJsonCallFunc);
-		L.RegFunction("AddEventTrigger", AddEventTrigger);
+		L.RegFunction("ScriptExists", ScriptExists);
+		L.RegFunction("AddTrigger", AddTrigger);
+		L.RegFunction("ClearTrigger", ClearTrigger);
+		L.RegFunction("AddClick", AddClick);
+		L.RegFunction("ClearClick", ClearClick);
 		L.EndStaticLibs();
 	}
 
@@ -117,7 +121,24 @@ public class LuaFramework_LuaHelperWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int AddEventTrigger(IntPtr L)
+	static int ScriptExists(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			string arg0 = ToLua.CheckString(L, 1);
+			bool o = LuaFramework.LuaHelper.ScriptExists(arg0);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddTrigger(IntPtr L)
 	{
 		try
 		{
@@ -125,7 +146,58 @@ public class LuaFramework_LuaHelperWrap
 			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 1, typeof(UnityEngine.GameObject));
 			UnityEngine.EventSystems.EventTriggerType arg1 = (UnityEngine.EventSystems.EventTriggerType)ToLua.CheckObject(L, 2, typeof(UnityEngine.EventSystems.EventTriggerType));
 			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 3);
-			LuaFramework.LuaHelper.AddEventTrigger(arg0, arg1, arg2);
+			LuaFramework.LuaHelper.AddTrigger(arg0, arg1, arg2);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ClearTrigger(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 1, typeof(UnityEngine.GameObject));
+			UnityEngine.EventSystems.EventTriggerType arg1 = (UnityEngine.EventSystems.EventTriggerType)ToLua.CheckObject(L, 2, typeof(UnityEngine.EventSystems.EventTriggerType));
+			LuaFramework.LuaHelper.ClearTrigger(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddClick(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.UI.Button arg0 = (UnityEngine.UI.Button)ToLua.CheckObject<UnityEngine.UI.Button>(L, 1);
+			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 2);
+			LuaFramework.LuaHelper.AddClick(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ClearClick(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.UI.Button arg0 = (UnityEngine.UI.Button)ToLua.CheckObject<UnityEngine.UI.Button>(L, 1);
+			LuaFunction arg1 = ToLua.CheckLuaFunction(L, 2);
+			LuaFramework.LuaHelper.ClearClick(arg0, arg1);
 			return 0;
 		}
 		catch (Exception e)

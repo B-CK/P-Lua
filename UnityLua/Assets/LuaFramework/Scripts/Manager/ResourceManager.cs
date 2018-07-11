@@ -8,19 +8,18 @@ using Object = UnityEngine.Object;
 
 namespace LuaFramework
 {
-    enum ResourceLoadType
+    public enum ResourceLoadType
     {
-        Default = 0,                        // 资源已加载,直接取资源
-        Persistent = 1 << 0,                // 永驻内存的资源
-        Cache = 1 << 1,                     // Asset需要缓存
+        Default            = 0,                          // 资源已加载,直接取资源
+        Persistent         = 1 << 0,                     // 永驻内存的资源
+        Cache              = 1 << 1,                     // Asset需要缓存
 
-        UnLoad = 1 << 4,                    // 利用www加载并且处理后是否立即unload ab,如不卸载,则在指定时间后清理
-
-        Immediate = 1 << 5,                 // 需要立即加载
+        UnLoad             = 1 << 4,                     // 利用www加载并且处理后是否立即unload ab,如不卸载,则在指定时间后清理
+        Immediate          = 1 << 5,                     // 需要立即加载
         // 加载方式
-        LoadBundleFromFile = 1 << 6,        // 利用AssetBundle.LoadFromFile加载
-        LoadBundleFromWWW = 1 << 7,         // 利用WWW 异步加载 AssetBundle
-        ReturnAssetBundle = 1 << 8,         // 返回scene AssetBundle,默认unload ab
+        LoadBundleFromFile = 1 << 6,                     // 利用AssetBundle.LoadFromFile加载
+        LoadBundleFromWWW  = 1 << 7,                     // 利用WWW 异步加载 AssetBundle
+        ReturnAssetBundle  = 1 << 8,                     // 返回scene AssetBundle,默认unload ab
     }
     class CacheObject
     {
@@ -58,36 +57,36 @@ namespace LuaFramework
     public class ResourceManager : Manager
     {
         //资源存储策略
-        private Dictionary<string, Object> persistantObjects = new Dictionary<string, Object>();//key-依赖路径
-        private Dictionary<string, CacheObject> cacheObjects = new Dictionary<string, CacheObject>();
+        private Dictionary<string, Object> persistantObjects    = new Dictionary<string, Object>();       //key-依赖路径
+        private Dictionary<string, CacheObject> cacheObjects    = new Dictionary<string, CacheObject>();
         //加载的AB资源包
-        private Dictionary<string, AssetBundle> dependenciesObj = new Dictionary<string, AssetBundle>();//key-依赖路径
-
+        private Dictionary<string, AssetBundle> dependenciesObj = new Dictionary<string, AssetBundle>();  //key-依赖路径
         //加载任务
-        private Dictionary<string, AssetLoadTask> loadingFiles = new Dictionary<string, AssetLoadTask>();//key-文件名
-        private Dictionary<uint, AssetLoadTask> loadingTasks = new Dictionary<uint, AssetLoadTask>();//key-任务ID
-        private ObjectPool<AssetLoadTask> assetLoadTaskPool = new ObjectPool<AssetLoadTask>();//加载资源的相关信息
-        private Queue<AssetLoadTask> delayAssetLoadTask = new Queue<AssetLoadTask>();
-        private ObjectPool<LoadTask> loadTaskPool = new ObjectPool<LoadTask>();
-        private Queue<LoadTask> delayLoadTask = new Queue<LoadTask>();
+        private Dictionary<string, AssetLoadTask> loadingFiles  = new Dictionary<string, AssetLoadTask>();//key-文件名
+        private Dictionary<uint, AssetLoadTask> loadingTasks    = new Dictionary<uint, AssetLoadTask>();  //key-任务ID
+        private ObjectPool<AssetLoadTask> assetLoadTaskPool     = new ObjectPool<AssetLoadTask>();        //加载资源的相关信息
+        private Queue<AssetLoadTask> delayAssetLoadTask         = new Queue<AssetLoadTask>();
+        private ObjectPool<LoadTask> loadTaskPool               = new ObjectPool<LoadTask>();
+        private Queue<LoadTask> delayLoadTask                   = new Queue<LoadTask>();
 
-        private bool canStartCleanupMemeory = true;
+        private bool canStartCleanupMemeory                     = true;
+        private const float cleanupMemInterval                  = 180;
+        private const float cleanupCacheInterval                = 120;
+        private const float cleanupDepInterval                  = 30;
+       
+        private string preloadListPath                          = "config/preloadlist.txt";
+        private List<string> preloadList                        = new List<string>();
+
+        private Dictionary<string, int> refCount                = new Dictionary<string, int>();
+        private Dictionary<string, float> refDelTime            = new Dictionary<string, float>();
+        private int currentTaskCount                            = 0;
+        private const int defaultMaxTaskCount                   = 10;
+
         private float cleanupMemoryLastTime;
         private float cleanupCacheBundleLastTime;
         private float cleanupDependenciesLastTime;
-        private const float cleanupMemInterval = 180;
-        private const float cleanupCacheInterval = 120;
-        private const float cleanupDepInterval = 30;
 
         private AssetBundleManifest manifest;
-        private string preloadListPath = "config/preloadlist.txt";
-        private List<string> preloadList = new List<string>();
-
-
-        private Dictionary<string, int> refCount = new Dictionary<string, int>();
-        private Dictionary<string, float> refDelTime = new Dictionary<string, float>();
-        private const int defaultMaxTaskCount = 10;
-        private int currentTaskCount = 0;
 
         private static uint nextTaskId;
 

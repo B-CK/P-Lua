@@ -10,13 +10,13 @@ NetworkMgr = LuaHelper.GetNetManager();
 WWW = UnityEngine.WWW;
 GameObject = UnityEngine.GameObject;
 
+Bit = require "bit"
 require "Common.Define"
 Local = require "Common.Local"
-
 Class = require "Common.Class"
 LuaUtils = require "Common.Utils"
 CfgMgr = require "Cfg.CfgManager"
 
-local _, err = LuaUtils.my_xpcall(CfgMgr.init)
+local _, err = LuaUtils.Myxpcall(CfgMgr.Init)
 
 

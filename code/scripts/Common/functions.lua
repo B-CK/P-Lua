@@ -29,7 +29,11 @@ function LogError(str)
     if not Local.LogManager then
         return
     end
-    Util.LogError(str .. "\r\n" .. debug.traceback());
+    if Local.LogTraceback then
+        Util.LogError(str .. "\r\n" .. debug.traceback());
+    else
+        Util.LogError(str)
+    end
 end
 
 --警告日志--
@@ -37,7 +41,11 @@ function LogWarning(str)
     if not Local.LogManager then
         return
     end
-    Util.LogWarning(str);
+    if Local.LogTraceback then
+        Util.LogWarning(str .. "\r\n" .. debug.traceback());
+    else
+        Util.LogWarning(str)
+    end
 end
 
 --输出黄色日志-无格式
@@ -126,4 +134,15 @@ function FindPanel(str)
         return nil;
     end
     return obj:GetComponent("BaseLua");
+end
+
+---@param a 判定条件
+---@param b true返回b
+---@param c false返回c
+function TernaryOperation(a, b, c)
+    if a then
+        return b
+    else
+        return c
+    end
 end

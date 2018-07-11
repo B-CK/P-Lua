@@ -11,9 +11,8 @@ public static class LuaBinder
 		L.BeginModule(null);
 		LuaInterface_DebuggerWrap.Register(L);
 		LuaProfilerWrap.Register(L);
-		ViewWrap.Register(L);
-		BaseWrap.Register(L);
 		ManagerWrap.Register(L);
+		BaseWrap.Register(L);
 		L.BeginModule("LuaInterface");
 		LuaInterface_LuaInjectionStationWrap.Register(L);
 		LuaInterface_InjectTypeWrap.Register(L);
@@ -101,7 +100,6 @@ public static class LuaBinder
 		LuaFramework_AppConstWrap.Register(L);
 		LuaFramework_LuaHelperWrap.Register(L);
 		LuaFramework_ByteBufferWrap.Register(L);
-		LuaFramework_LuaBehaviourWrap.Register(L);
 		LuaFramework_GameManagerWrap.Register(L);
 		LuaFramework_LuaManagerWrap.Register(L);
 		LuaFramework_SoundManagerWrap.Register(L);
@@ -109,6 +107,7 @@ public static class LuaBinder
 		LuaFramework_ThreadManagerWrap.Register(L);
 		LuaFramework_NetworkManagerWrap.Register(L);
 		LuaFramework_ResourceManagerWrap.Register(L);
+		LuaFramework_ResourceLoadTypeWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("System");
 		L.RegFunction("Action", System_Action);

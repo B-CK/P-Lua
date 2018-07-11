@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using LuaInterface;
 using System;
+using UnityEngine.UI;
 
 namespace LuaFramework
 {
@@ -79,13 +80,36 @@ namespace LuaFramework
             if (func != null) func.Call(data);
         }
 
+        public static void Concat<T>(LuaTable table, Dictionary<string, T> dic)
+        {
+            foreach (var pairs in dic)
+            {
+                table[pairs.Key] = pairs.Value;
+            }
+        }
+
+        public static void Concat<T>(LuaTable table, Dictionary<int, T> dic)
+        {
+            foreach (var pairs in dic)
+            {
+                table[pairs.Key] = pairs.Value;
+            }
+        }
+
+        public static bool ScriptExists(string name)
+        {
+            string modulePath = name.Replace('.', '/') + ".lua";
+            string path = string.Format("{0}/{1}.lua", Util.ScriptPath, modulePath);
+            return false;
+        }
+
         /// <summary>
         /// UI事件添加函数
         /// </summary>
         /// <param name="go"></param>
         /// <param name="triggerType"></param>
         /// <param name="func"></param>
-        public static void AddEventTrigger(GameObject go, EventTriggerType triggerType, LuaFunction func)
+        public static void AddTrigger(GameObject go, EventTriggerType triggerType, LuaFunction func)
         {
             EventTrigger evtTrigger = go.GetComponent<EventTrigger>();
             if (evtTrigger == null)
@@ -99,5 +123,24 @@ namespace LuaFramework
                 callback = trigger,
             });
         }
-}
+        public static void ClearTrigger(GameObject go, EventTriggerType triggerType)
+        {
+            EventTrigger evtTrigger = go.GetComponent<EventTrigger>();
+            if (evtTrigger == null) return;
+            evtTrigger.triggers.RemoveAll(trigger => trigger.eventID == triggerType);
+        }
+        /// <summary>
+        /// Button点击事件
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="func"></param>
+        public static void AddClick(Button button, LuaFunction func)
+        {
+            button.onClick.AddListener(() => func.Call(button.gameObject));
+        }
+        public static void ClearClick(Button button, LuaFunction func)
+        {
+            button.onClick.RemoveAllListeners();
+        }
+    }
 }

@@ -39,10 +39,10 @@ public class LuaResLoader : LuaFileUtils
 #if !UNITY_EDITOR
         byte[] buffer = ReadDownLoadFile(fileName);
 
-        if (buffer == null)
-        {
-            buffer = ReadResourceFile(fileName);
-        }        
+        //if (buffer == null)
+        //{
+        //    buffer = ReadResourceFile(fileName);
+        //}        
         
         if (buffer == null)
         {
@@ -51,10 +51,10 @@ public class LuaResLoader : LuaFileUtils
 #else
         byte[] buffer = base.ReadFile(fileName);
 
-        if (buffer == null)
-        {
-            buffer = ReadResourceFile(fileName);
-        }
+        //if (buffer == null)
+        //{
+        //    buffer = ReadResourceFile(fileName);
+        //}
 
         if (buffer == null)
         {
@@ -86,8 +86,8 @@ public class LuaResLoader : LuaFileUtils
                 sb.Append("\n\tno file '").Append(searchPaths[i]).Append('\'');
             }
 
-            sb.Append("\n\tno file './Resources/").Append(fileName).Append(".lua'")
-              .Append("\n\tno file '").Append(LuaConst.luaResDir).Append('/')
+            //.Append("\n\tno file './Resources/").Append(fileName).Append(".lua'")
+            sb.Append("\n\tno file '").Append(LuaConst.luaResDir).Append('/')
 			  .Append(fileName).Append(".lua'");
             sb = sb.Replace("?", fileName);
 
@@ -95,25 +95,25 @@ public class LuaResLoader : LuaFileUtils
         }
     }
 
-    byte[] ReadResourceFile(string fileName)
-    {
-        if (!fileName.EndsWith(".lua"))
-        {
-            fileName += ".lua";
-        }
+    //byte[] ReadResourceFile(string fileName)
+    //{
+    //    if (!fileName.EndsWith(".lua"))
+    //    {
+    //        fileName += ".lua";
+    //    }
 
-        byte[] buffer = null;
-        string path = "Lua/" + fileName;
-        TextAsset text = Resources.Load(path, typeof(TextAsset)) as TextAsset;
+    //    byte[] buffer = null;
+    //    string path = "Lua/" + fileName;
+    //    TextAsset text = Resources.Load(path, typeof(TextAsset)) as TextAsset;
 
-        if (text != null)
-        {
-            buffer = text.bytes;
-            Resources.UnloadAsset(text);
-        }
+    //    if (text != null)
+    //    {
+    //        buffer = text.bytes;
+    //        Resources.UnloadAsset(text);
+    //    }
 
-        return buffer;
-    }
+    //    return buffer;
+    //}
 
     byte[] ReadDownLoadFile(string fileName)
     {

@@ -241,7 +241,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\LuaFramework\Scripts\Common\LuaBehaviour.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\Common\LuaLoader.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\ConstDefine\AppConst.cs" />
     <Compile Include="Assets\LuaFramework\Scripts\ConstDefine\ManagerName.cs" />
@@ -343,10 +342,10 @@
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_AppConstWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_ByteBufferWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_GameManagerWrap.cs" />
-    <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_LuaBehaviourWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_LuaHelperWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_LuaManagerWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_NetworkManagerWrap.cs" />
+    <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_ResourceLoadTypeWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_ResourceManagerWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_SoundManagerWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\LuaFramework_ThreadManagerWrap.cs" />
@@ -423,7 +422,6 @@
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\UnityEngine_UI_TextWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\UnityEngine_WrapModeWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\UnityEngine_WWWWrap.cs" />
-    <Compile Include="Assets\LuaFramework\ToLua\Source\Generate\ViewWrap.cs" />
     <Compile Include="Assets\LuaFramework\ToLua\Source\LuaConst.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,9 @@ namespace LuaFramework
         /// </summary>
         void Init()
         {
-            DontDestroyOnLoad(gameObject);  //防止销毁自己
+            var gos = FindObjectsOfType<GameObject>();
+            for (int i = 0; i < gos.Length; i++)
+                DontDestroyOnLoad(gos[i]);  //防止销毁自己
 
             CheckExtractResource(); //释放资源
             Screen.sleepTimeout = SleepTimeout.NeverSleep;

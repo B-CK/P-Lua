@@ -1,7 +1,6 @@
 local insert = table.insert
 local concat = table.concat
-local sort = sort
-local fmt = string.format
+local sort = table.sort
 local tostring = tostring
 local schar = string.char
 local sbyte = string.byte
@@ -14,29 +13,33 @@ local date = os.date
 local print = print
 local require = require
 local math = math
-
-local Util = Util
-
+local getmetatable = getmetatable
+local setmetatable = setmetatable
 local traceback = debug.traceback
 local xpcall = xpcall
 
-local function swap_value(t, a, b)
+local Bit = Bit
+local Util = Util
+
+local Utils = {}
+
+function Utils.SwapValue(t, a, b)
     local temp = t[a]
     t[a] = t[b]
     t[b] = temp
 end
 
-local function table_sort(t, cmp)
+function Utils.TableSort(t, cmp)
     for i = 1, #t do
         for j = #t, i + 1, -1 do
             if not cmp(t[j - 1], t[j]) then
-                swap_value(t, j, j - 1)
+                SwapValue(t, j, j - 1)
             end
         end
     end
 end
 
-local function table_count(t)
+function Utils.TableCount(t)
     local count = 0
     for i, k in pairs(t) do
         count = count + 1
@@ -44,7 +47,7 @@ local function table_count(t)
     return count
 end
 
-local function table_sub_condition(t, condition)
+function Utils.TableSubCondition(t, condition)
     local t2 = {}
     for i, k in pairs(t) do
         if condition(i, k) then
@@ -54,7 +57,7 @@ local function table_sub_condition(t, condition)
     return t2
 end
 
-local function table_sub_count(t, count)
+function Utils.TableSubCount(t, count)
     local t2 = {}
     for i, k in ipairs(t) do
         if i <= count then
@@ -64,7 +67,7 @@ local function table_sub_count(t, count)
     return t2
 end
 
-local function CompareList(list1, list2, cmp)
+function Utils.CompareList(list1, list2, cmp)
     if list1 == list2 then
         return true
     else
@@ -74,15 +77,15 @@ local function CompareList(list1, list2, cmp)
             return false
         else
             if cmp then
-                table_sort(list1, cmp)
-                table_sort(list2, cmp)
+                TableSort(list1, cmp)
+                TableSort(list2, cmp)
             else
                 sort(list1)
                 sort(list2)
             end
             for i, value in ipairs(list1) do
                 if value ~= list2[i] then
-                    Util.Log(string.format("[utils:CompareList] list1[%s]=[%s] while list2[%s]=[%s], return false!", i, value, i, list2[i]))
+                    Util.Log(string.format("[Utils:CompareList] list1[%s]=[%s] while list2[%s]=[%s], return false!", i, value, i, list2[i]))
                     return false
                 end
             end
@@ -91,17 +94,17 @@ local function CompareList(list1, list2, cmp)
     end
 end
 
-local function errhandler(e)
+function Utils.ErrHandler(e)
     Util.LogError(traceback())
 end
 
-local function my_xpcall(func, data)
+function Utils.Myxpcall(func, data)
     return xpcall(function()
         func(data)
-    end, errhandler)
+    end, Utils.ErrHandler)
 end
 
-local function array_to_set(t)
+function Utils.ArrayToSet(t)
     local r = {}
     for _, v in ipairs(t) do
         r[v] = true
@@ -109,7 +112,7 @@ local function array_to_set(t)
     return r
 end
 
-local function tolong(s)
+function Utils.tolong(s)
     local n = 0
     for i = #s, 1, -1 do
         n = n * 256 + sbyte(s, i)
@@ -117,7 +120,7 @@ local function tolong(s)
     return n
 end
 
-local function bytes_to_string (bytes)
+function Utils.BytesToString (bytes)
     local d = {}
     for i = 1, bytes.Length do
         local x = bytes[i]
@@ -126,7 +129,7 @@ local function bytes_to_string (bytes)
     return concat(d)
 end
 
---local function string_to_bytes(s)
+--function Utils.string_to_bytes(s)
 --    local bytes = Byte[#s]
 --    for i = 1, #s do
 --        bytes[i - 1] = sbyte(s, i)
@@ -137,21 +140,20 @@ end
 --local _test_string = "abcdefg\50\100\200"
 --assert(_test_string == bytes_to_string(string_to_bytes(_test_string)))
 
-local function strtime(fmt, t)
+function Utils.StringTimeFmt(fmt, t)
     return date(fmt, t)
 end
 
-local function strtime1(t)
+function Utils.StringTime(t)
     return date("%Y-%m-%d %H:%M:%S", t)
 end
 
 -- 返回 hh:ss
-local function strtime_inday(t)
-    return date("%H:%M", t)
+function Utils.StringTimeInDay(t)
+    return date("%H:%M:%S", t)
 end
 
----@see 构造命名空间
-local function get_or_create(namespace)
+function Utils.GetOrCreate(namespace)
     local t = _G
     local idx = 1
     while true do
@@ -173,24 +175,24 @@ end
 
 ---@param src table
 ---@param dst table
-local function deep_copy_to(src, dst)
+function Utils.DeepCopy(src, dst)
     for k, v in pairs(src) do
         if type(v) ~= "table" then
             dst[k] = v
         else
             dst[k] = dst[k] or {}
-            deep_copy_to(v, dst[k])
+            DeepCopy(v, dst[k])
         end
     end
 end
 
-local function shallow_copy_to(src, dst)
+function Utils.ShallowCopy(src, dst)
     for k, v in pairs(src) do
         dst[k] = v
     end
 end
 
-local function clear_table(t)
+function Utils.ClearTable(t)
     if t == nil then
         return
     end
@@ -199,12 +201,12 @@ local function clear_table(t)
     end
 end
 
-local function copy_table(src)
+function Utils.CopyTable(src)
     local inst = {};
     local k, v;
     for k, v in pairs(src) do
         if type(v) == "table" then
-            inst[k] = copy_table(v);
+            inst[k] = CopyTable(v);
         else
             inst[k] = v;
         end
@@ -214,13 +216,13 @@ local function copy_table(src)
     return inst;
 end
 
-local function create_obj(template, obj)
+function Utils.CreateObj(template, obj)
     local inst = obj or {};
     local k, v;
     for k, v in pairs(template) do
         if (not inst[k]) and type(v) ~= "function" then
             if type(v) == "table" and v ~= template then
-                inst[k] = copy_table(v);
+                inst[k] = CopyTable(v);
             end
         end
     end
@@ -229,10 +231,10 @@ local function create_obj(template, obj)
     return inst;
 end
 
-local function insidepolygon(polygon, p)
-    --    printyellow("insidepolygon")
+function Utils.InsidePolygon(polygon, p)
+    --    PrintYellow("insidepolygon")
     --    printt(polygon)
-    --    printyellow("polygon.count:",#polygon)
+    --    PrintYellow("polygon.count:",#polygon)
     local N = #polygon
     local counter = 0
     local i
@@ -268,7 +270,7 @@ local function insidepolygon(polygon, p)
 end
 
 --判断一个点是否在一个任意多边形内
-local function insideAnyPolygon(polygon, p)
+function Utils.InsideAnyPolygon(polygon, p)
     local count = 0
     local n = #polygon
     local a
@@ -297,7 +299,7 @@ local function insideAnyPolygon(polygon, p)
 end
 
 --获取枚举名
-local function getenumname(enumtype, enumvalue)
+function Utils.GetEnumName(enumtype, enumvalue)
     for name, value in pairs(enumtype) do
         if value == enumvalue then
             return name
@@ -307,7 +309,7 @@ local function getenumname(enumtype, enumvalue)
 end
 
 --设置粒子特效scale
-local function SetParticleSystemScale(gameObject, scale)
+function Utils.SetParticleSystemScale(gameObject, scale)
     if not gameObject or not scale or scale <= 0 or scale == 1 then
         return
     end
@@ -322,7 +324,7 @@ local function SetParticleSystemScale(gameObject, scale)
     end
 end
 
-local function SetDefaultComponent(go, com)
+function Utils.SetDefaultComponent(go, com)
     if go then
         local component = go:GetComponent(com)
         if not component then
@@ -339,13 +341,13 @@ local masks = { 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC }
 
 local value_masks = { 0x7F, 0x1F, 0x0F, 0x07, 0x03, 0x01 }
 
-local function bin_search(tb, val)
+function Utils.BinSearch(tb, val)
     local from, to
     from = 1
     to = #tb
     while from <= to do
         local mid = math.floor(from / 2 + to / 2)
-        -- printyellow(from,to,mid)
+        -- PrintYellow(from,to,mid)
         if tb[mid] > val then
             to = mid - 1
         elseif tb[mid] < val then
@@ -357,7 +359,7 @@ local function bin_search(tb, val)
     return nil
 end
 
-local function IsExsception(val)
+function Utils.IsExsception(val)
     if not exceptions_mask then
         exceptions_mask = {}
         local path = LuaHelper.GetPath("config/encode.txt")
@@ -368,31 +370,31 @@ local function IsExsception(val)
                 if not num then
                     break
                 end
-                -- printyellow("num = ",num,#exceptions_mask+1)
+                -- PrintYellow("num = ",num,#exceptions_mask+1)
                 table.insert(exceptions_mask, num)
             end
             file:close()
         end
     end
-    local ret = bin_search(exceptions_mask, val)
+    local ret = BinSearch(exceptions_mask, val)
     if ret then
-        printyellow("IsExsception")
+        PrintYellow("IsExsception")
     end
     return ret --bin_search(exceptions_mask,val)
 end
 
-local function IsChinese(val)
+function Utils.IsChinese(val)
     --4e00-u9fa5
     local ret = val >= 0x4E00 and val <= 0x9FA5
     if ret then
-        printyellow("IsChinese")
+        PrintYellow("IsChinese")
     end
     return ret
 end
 
 local ExpCharacters = { 91, 93, 62, 60, 63, 92, 47, 46, 44, 42, 35, 33, 38, 40, 41, 96, 58, 61, 59 }
 
-local function IsInExpCharacters(c)
+function Utils.IsInExpCharacters(c)
     for _, char in ipairs(ExpCharacters) do
         if c == char then
             return true
@@ -401,22 +403,22 @@ local function IsInExpCharacters(c)
     return false
 end
 
-local function IsCharacter(bt)
-    -- printyellow("IsCharacter")
+function Utils.IsCharacter(bt)
+    -- PrintYellow("IsCharacter")
     local ret = (bt >= 48 and bt <= 57) or (bt >= 65 and bt <= 90) or (bt >= 97 and bt <= 122) or IsInExpCharacters(bt)
     if ret then
-        printyellow("IsCharacter")
+        PrintYellow("IsCharacter")
     end
     return ret
 end
 
-local function get_bytes_value(bytes, len)
+function Utils.GetBytesValue(bytes, len)
     local ret = 0
     local msk = 0x3F
-    ret = bit.band(bytes[1], value_masks[len])
+    ret = Bit.band(bytes[1], value_masks[len])
     for i = 2, len do
-        ret = bit.lshift(ret, 6)
-        ret = bit.bor(ret, bit.band(bytes[i], msk))
+        ret = Bit.lshift(ret, 6)
+        ret = Bit.bor(ret, Bit.band(bytes[i], msk))
     end
     return ret
 end
@@ -425,7 +427,7 @@ end
 -- b: type bool, true:legal name,false:illegal name
 -- if b == true then info is legal name
 -- else info is error info
-local function CheckName(name)
+function Utils.CheckName(name)
     name = string.gsub(name, "%[%a%]", "")
     name = string.gsub(name, "%[%a%a%]", "")
     name = string.gsub(name, "%[%x%x%x%x%x%x%]", "")
@@ -446,22 +448,22 @@ local function CheckName(name)
         if IsCharacter(bt) then
             len = len + 1
         else
-            code_len = 0
+            local code_len = 0
             for i = 6, 1, -1 do
-                if bit.band(masks[i], bt) == masks[i] then
+                if Bit.band(masks[i], bt) == masks[i] then
                     code_len = i
                     break
                 end
             end
             local bytes = { bt }
             if code_len > 0 then
-                -- printyellow("code_len",code_len)
+                -- PrintYellow("code_len",code_len)
                 for i = 2, code_len do
                     local sbt = string.byte(name, k + i - 1)
                     table.insert(bytes, sbt)
                 end
-                local val = get_bytes_value(bytes, code_len)
-                -- printyellow("val = ",val)
+                local val = GetBytesValue(bytes, code_len)
+                -- PrintYellow("val = ",val)
                 if IsChinese(val) or IsExsception(val) then
                     k = k + code_len - 1
                     len = len + 1
@@ -480,7 +482,7 @@ local function CheckName(name)
     return true, name
 end
 
-local function Split(str, sep)
+function Utils.Split(str, sep)
     local fields = {}
     local flag = "(.-)" .. sep
     local last_end = 1
@@ -499,30 +501,4 @@ local function Split(str, sep)
     return fields
 end
 
-return {
-    bytes_to_string = bytes_to_string,
-    array_to_set = array_to_set,
-    strtime = strtime,
-    strtime1 = strtime1,
-    strtime_inday = strtime_inday,
-    deep_copy_to = deep_copy_to,
-    shallow_copy_to = shallow_copy_to,
-    clear_table = clear_table,
-    tolong = tolong,
-    get_or_create = get_or_create,
-    copy_table = copy_table,
-    create_obj = create_obj,
-    insidepolygon = insidepolygon,
-    insideAnyPolygon = insideAnyPolygon,
-    getenumname = getenumname,
-    SetParticleSystemScale = SetParticleSystemScale,
-    table_sort = table_sort,
-    CompareList = CompareList,
-    table_count = table_count,
-    table_sub_condition = table_sub_condition,
-    table_sub_count = table_sub_count,
-    SetDefaultComponent = SetDefaultComponent,
-    CheckName = CheckName,
-    my_xpcall = my_xpcall,
-    Split = Split,
-}
+return Utils
