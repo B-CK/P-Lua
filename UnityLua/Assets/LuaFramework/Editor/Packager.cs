@@ -93,8 +93,8 @@ public class Packager
         //if (AppConst.ExampleMode) {
         //    HandleExampleBundle();
         //}
-        string resPath = "Assets/" + AppConst.AssetDir;
-        BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), BuildAssetBundleOptions.None, target);
+        //string resPath = "Assets/" + AppConst.AssetDir;
+        //BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), BuildAssetBundleOptions.None, target);
         BuildFileIndex();
 
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;

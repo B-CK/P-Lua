@@ -5,6 +5,7 @@ using System.Reflection;
 using LuaInterface;
 using System;
 using UnityEngine.UI;
+using System.IO;
 
 namespace LuaFramework
 {
@@ -99,7 +100,10 @@ namespace LuaFramework
         public static bool ScriptExists(string name)
         {
             string modulePath = name.Replace('.', '/') + ".lua";
-            string path = string.Format("{0}/{1}.lua", Util.ScriptPath, modulePath);
+            if (Application.isMobilePlatform)
+                return File.Exists(string.Format("{0}/{1}.lua", LuaConst.luaResDir, modulePath));
+            if (Application.isEditor)
+                return File.Exists(string.Format("{0}/{1}.lua", LuaConst.luaDir, modulePath));
             return false;
         }
 

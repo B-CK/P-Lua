@@ -16,6 +16,9 @@ Local = require "Common.Local"
 Class = require "Common.Class"
 LuaUtils = require "Common.Utils"
 CfgMgr = require "Cfg.CfgManager"
+List = require"Common.List"
+Queue = require"Common.Queue"
+Stack = require"Common.Stack"
 
 local _, err = LuaUtils.Myxpcall(CfgMgr.Init)
 

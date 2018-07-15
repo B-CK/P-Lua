@@ -1,6 +1,6 @@
 require "3rd.pblua.login_pb"
 require "3rd.pbc.protobuf"
-local uimgr = require("Logic.UIManager")
+local UIMgr = require("Logic.UIManager")
 
 --管理器--
 Game = {};
@@ -13,11 +13,34 @@ function Game.OnInitOK()
 
     PrintYellow('--------------->> LuaFramework InitOK');
 
-    Game.test_function()
-    Game.test_stringMatch()
+    UIMgr.Show("DlgMain")
+
+    --Game.test_function()
+    --Game.test_stringMatch()
     --UpdateBeat:Add(Game.Update, "")
+    --Game.test_queue()
 end
 
+
+
+function Game.test_queue()
+    local linkList = list:new()
+    linkList:push(1)
+    linkList:push(2)
+    linkList:push(3)
+
+    local list = List:new()
+    list:Add(1)
+    list:Add(2)
+    list:Add(3)
+    list:Add("-A")
+    list:Add("-B")
+    list:InitEnumerator()
+    while list:MoveNext() do
+        PrintYellow("Enumerator Current", list:Current())
+    end
+    PrintTable(list:ToTable())
+end
 local i = 0
 function Game.Update()
     i = i + 2

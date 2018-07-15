@@ -4,7 +4,6 @@ local format = string.format
 local match = string.match
 local loaded = package.loaded
 
-
 local Bit = Bit
 local Time = Time
 local Local = Local
@@ -24,7 +23,7 @@ local LOAD_ING = 1              --正在加载中
 local LOAD_SUCC = 2             --加载成功
 local LAYER_UI = 20             --UI Layer层
 local MAX_HIDE_VIEW_NUM = 0
-local UI_LOAD_TYPE = LuaFramework.ResourceLoadType.LoadBundleFromFile -- www方式加载
+local UI_LOAD_TYPE = LuaFramework.ResourceLoadType.LoadBundleFromFile:ToInt() -- www方式加载
 
 local NeedRefresh               --是否需要刷新
 local OnShow                    --页面显示回调
@@ -33,6 +32,8 @@ local ShowLoading               --显示加载中提示
 local HideLoading               --隐藏加载中提示
 local ShowLoadedView            --显示已经加载的页面 用于弹出堆栈 或者tab页切换
 local HideLoadedView            --隐藏已经加载的页面 用于弹出堆栈 或者tab页切换
+local OnShowTab                 --显示Tab页
+local OnHideTab                 --隐藏Tab页
 local CallBackDestroyAllDlgs   --销毁所有界面回调事件
 
 --[[
@@ -54,11 +55,13 @@ local CallBackDestroyAllDlgs   --销毁所有界面回调事件
     needRefresh             -- 是否需要刷新
     refreshParams           -- 刷新界面时所带参数
 --]]
-local views = {}
-local isLocked = false
-local dialogStack = nil
-local uiRoot = nil
-local playingParticleSystems = {}
+---@type Stack
+local _dialogStack = nil
+local _dialogConfigs = nil
+local _views = {}
+local _isLocked = false
+local _uiRoot = nil
+local _playingParticleSystems = {}
 
 local UIManager = {}
 local this = UIManager
@@ -71,11 +74,10 @@ UIShowType = {
     DestroyWhenHide         = 4, --Hide时释放资源
 }
 
-
 --显示已经加载的页面 用于弹出堆栈 或者tab页切换
 ShowLoadedView = function(viewName)
     if Local.LogModuals.UIManager then
-        PrintYellow("ShowLoadedView", viewName)
+        print("ShowLoadedView ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     local params = data.params
@@ -110,7 +112,7 @@ end
 --隐藏已经加载的页面 用于弹出堆栈 或者tab页切换
 HideLoadedView = function(viewName)
     if Local.LogModuals.UIManager then
-        PrintYellow("HideLoadedView", viewName)
+        print("HideLoadedView ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     if data.isShow and this.HasScript(viewName) then
@@ -139,46 +141,48 @@ HideLoadedView = function(viewName)
     end
 end
 
-
-
 function UIManager.Init()
-    uiRoot = FindObj("/Canvas/GuiCamera")
-    if uiRoot and uiRoot.transform.parent then
-        GameObject.DontDestroyOnLoad(uiRoot.transform.parent)
+    _uiRoot = FindObj("/Canvas/GuiCamera")
+    if _uiRoot and _uiRoot.transform.parent then
+        GameObject.DontDestroyOnLoad(_uiRoot.transform.parent)
     end
 
-    UpdateBeat:AddListener(this.Update)
-    LateUpdateBeat:AddListener(this.LateUpdate)
+    UpdateBeat:Add(this.Update)
+    LateUpdateBeat:Add(this.LateUpdate)
     --status.AddStatusListener("UImgr", gameevent.evt_update, evtid_update)
     --status.AddStatusListener("UImgr", gameevent.evt_late_update, evtid_late_update)
     --status.AddStatusListener("UImgr", gameevent.evt_late_update2, evtid_late_update2)
-    dialogStack = list:new()
+    _dialogStack = Stack:new()
+    _dialogConfigs = CfgMgr.GetConfig("dialog")
+    if Local.LogModuals.UIManager then
+        PrintTable(_dialogConfigs or {})
+    end
 end
 
 function UIManager.Update()
-    for viewName, info in pairs(views) do
+    for viewName, info in pairs(_views) do
         if info.isShow then
             if (this.HasMethod(viewName, "Update")) then
                 this.Call(viewName, "Update")
             end
         end
     end
-    for i = #playingParticleSystems, 1, -1 do
-        local particle = playingParticleSystems[i].particle
+    for i = #_playingParticleSystems, 1, -1 do
+        local particle = _playingParticleSystems[i].particle
         if not particle.isPlaying then
-            local callback = playingParticleSystems[i].callback
+            local callback = _playingParticleSystems[i].callback
             if callback then
                 callback()
             end
-            table.remove(playingParticleSystems, i)
+            table.remove(_playingParticleSystems, i)
         else
-            playingParticleSystems[i].time = playingParticleSystems[i].time + Time.deltaTime
+            _playingParticleSystems[i].time = _playingParticleSystems[i].time + Time.deltaTime
         end
     end
 end
 
 function UIManager.LateUpdate()
-    for viewName, info in pairs(views) do
+    for viewName, info in pairs(_views) do
         if info.isShow then
             if (this.HasMethod(viewName, "LateUpdate")) then
                 this.Call(viewName, "LateUpdate")
@@ -188,7 +192,7 @@ function UIManager.LateUpdate()
 
         if info.needRefresh and NeedRefresh(viewName) then
             if Local.LogModuals.UIManager then
-                PrintYellow("LateUpdate Refresh", viewName)
+                print("LateUpdate Refresh ==>>", viewName)
                 PrintTable(info.refreshparams)
             end
             info.needRefresh = false
@@ -205,7 +209,7 @@ function UIManager.UnloadExpireView(now)
     local unshowViewNum = 0
     local toDestroyViewName
     local minHideTime = now
-    for name, data in pairs(views) do
+    for name, data in pairs(_views) do
         if data ~= nil and data.status == LOAD_SUCC and not data.isShow and not this.IsPersistent(name) and not this.IsInStack(name) then
             unshowViewNum = unshowViewNum + 1
             if data.hideTime ~= nil and data.hideTime < minHideTime then
@@ -221,7 +225,7 @@ end
 --未实现
 function UIManager.SecondUpdate(now)
     this.UnloadExpireView(now)
-    for viewName, info in pairs(views) do
+    for viewName, info in pairs(_views) do
         if info.isShow and this.HasMethod(viewName, "SecondUpdate") then
             this.Call(viewName, "SecondUpdate", now)
         end
@@ -229,12 +233,30 @@ function UIManager.SecondUpdate(now)
 end
 
 function UIManager.GetViewData(viewName)
-    local data = views[viewName]
+    local data = _views[viewName]
     if not data then
-        data = {}
+        data = {
+            filename       = nil,
+            status         = nil,
+            loaded         = nil,
+            gameObject     = nil,
+
+            isDialog       = nil,
+            dialogViewName = nil,
+
+            tabGroup       = nil,
+            isInitedTabs   = nil,
+            tabIndex       = nil,
+            tabGroupStates = nil,
+
+            hideTime       = nil,
+            isShow         = nil,
+            needRefresh    = nil,
+            refreshParams  = nil,
+        }
         local _, fileName = match(viewName, "^(.*)%.(.*)$")
         data.fileName = TernaryOperation(fileName, fileName, viewName)
-        views[viewName] = data
+        _views[viewName] = data
     end
     return data
 end
@@ -268,7 +290,7 @@ function UIManager.HasMethod(viewName, methodName)
 end
 
 function UIManager.IsShow(viewName)
-    local data = views[viewName]
+    local data = _views[viewName]
     if data and data.isShow then
         return data.isShow
     end
@@ -332,7 +354,7 @@ end
 
 function UIManager.GetDlgsShow()
     local list = {}
-    for name, data in pairs(views) do
+    for name, data in pairs(_views) do
         if data.isShow then
             table.insert(list, name)
         end
@@ -345,40 +367,36 @@ function UIManager.IsPersistent(viewName)
 end
 
 function UIManager.IsInStack(viewName)
-    if not dialogStack:IsEmpty() then
-        local it = dialogStack:CreateIterator()
-        while not it:IsEnd() do
-            if it:Cur().value == viewName then
+    if _dialogStack:Count() > 0 then
+        _dialogStack:InitEnumerator()
+        while _dialogStack:MoveNext() do
+            if _dialogStack:Current() == viewName then
                 return true
             else
-                local data = this.GetViewData(it:Cur().value)
-                if data.initedTabs and data.initedTabs[viewName] then
+                local data = this.GetViewData(_dialogStack:Current())
+                if data.isInitedTabs and data.isInitedTabs[viewName] then
                     return true
                 end
             end
-            it:MoveNext()
         end
     end
     return false
 end
 
 function UIManager.SetLock(lock)
-    isLocked = lock
+    _isLocked = lock
 end
 
 function UIManager.GetIsLock()
-    return isLocked
+    return _isLocked
 end
-
-
-
 
 ------------------------------------------------------------------
 ---普通窗口操作方法
 ------------------------------------------------------------------
 OnShow = function(viewName, params)
     if Local.LogModuals.UIManager then
-        PrintYellow("OnShow", viewName)
+        PrintYellow("OnShow ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     data.params = params
@@ -386,8 +404,8 @@ OnShow = function(viewName, params)
         HideLoading()
     end
     if data.dialogViewName ~= nil and data.dialogViewName ~= this.CurrentDialogName() then
-        PrintYellow("Dialog has been hide", "dialog name:", data.dialogViewName, "current dialog name:", this.CurrentDialogName())
-        HideLoadedView(viewName)
+        print("Dialog has been hide", "dialog name:", data.dialogViewName, "current dialog name:", this.CurrentDialogName())
+        --HideLoadedView(viewName)隐藏界面加载提示界面
     elseif this.HasScript(viewName) then
         this.Refresh(viewName, params)
         --if data.uifadein ~= nil then
@@ -398,7 +416,7 @@ OnShow = function(viewName, params)
 end
 OnHide = function(viewName)
     if Local.LogModuals.UIManager then
-        PrintYellow("OnHide", viewName)
+        PrintYellow("OnHide ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     if this.Call(viewName, "Hide") then
@@ -406,8 +424,51 @@ OnHide = function(viewName)
         data.gameObject:SetActive(false)
         data.dialogViewName = nil
         if this.IsUIShowType(viewName, UIShowType.DestroyWhenHide) then
-            Destroy(viewName, "Destroy")
+            this.Destroy(viewName, "Destroy")
         end
+    end
+end
+OnShowTab = function(viewName, tabName, params)
+    if Local.LogModuals.UIManager then
+        PrintYellow("OnShowTab ==>>", viewName, tabName)
+    end
+    local data = this.GetViewData(viewName)
+    local tabData = this.GetViewData(tabName)
+    if tabData.isShow then
+        return
+    end
+
+    if data.isInitedTabs[tabName] then
+        tabData.params = params
+        ShowLoadedView(tabName, params)
+    else
+        if (this.HasMethod(tabName, "ShowTab")) and not this.IsUIShowType(tabName, UIShowType.ShowImmediate) then
+            this.Call(tabName, "ShowTab", params)
+        else
+            this.Show(tabName, params)
+        end
+
+        data.isInitedTabs[tabName] = true
+        tabData.dialogViewName = viewName
+    end
+end
+OnHideTab = function(viewName, tabName)
+    if Local.LogModuals.UIManager then
+        PrintYellow("OnHideTab ==>>", viewName, tabName)
+    end
+    local data = this.GetViewData(viewName)
+    if Local.LogModuals.UIManager then
+        PrintTable(data.tabGroupStates)
+    end
+    local tabData = this.GetViewData(tabName)
+    if not tabData.isShow then
+        return
+    end
+    if Local.LogModuals.UIManager then
+        PrintYellow("TabName:", tabName, "inited:", data.isInitedTabs[tabName])
+    end
+    if data.isInitedTabs[tabName] then
+        HideLoadedView(tabName)
     end
 end
 NeedRefresh = function(viewName)
@@ -415,7 +476,7 @@ NeedRefresh = function(viewName)
 end
 function UIManager.Show(viewName, params)
     if Local.LogModuals.UIManager then
-        PrintYellow("Show", viewName)
+        PrintYellow("Show ==>>", viewName)
         PrintTable(params)
     end
     local data = this.GetViewData(viewName)
@@ -424,10 +485,10 @@ function UIManager.Show(viewName, params)
     end
     if data.status ~= LOAD_SUCC then
         if not data.loaded then
-            print(format("View:", viewName, "not loaded!"))
+            print(format("View: %s %s", viewName, "not loaded!\n"), debug.traceback())
             data.loaded = LOAD_ING
-            ShowLoading()--显示正在加载中提示界面
-            ResMgr:AddTask(format("UI/%s.ui", data.fileName), function(assetObj)
+            --ShowLoading()--显示界面加载提示界面
+            ResMgr:AddTask(format("ui/%s.bundle", data.fileName), function(assetObj)
                 if assetObj == nil then
                     return
                 end
@@ -436,14 +497,13 @@ function UIManager.Show(viewName, params)
                 if not viewObj then
                     data.loaded = nil
                     LogError(format("View %s prefab load fail!", viewName))
-                    --evt:trigger("load_end", {false, viewName})
                     return
                 end
                 data.status = LOAD_SUCC
                 data.gameObject = viewObj
                 data.fields = ViewUtil.ExportFields(viewObj)
                 local trans = viewObj.transform
-                trans.parent = uiRoot.transform
+                trans.parent = _uiRoot.transform
                 trans.localPosition = Vector3.zero
                 trans.localScale = Vector3.one
                 viewObj.name = data.fileName
@@ -472,7 +532,7 @@ end
 
 function UIManager.Refresh(viewName, params)
     if Local.LogModuals.UIManager then
-        PrintYellow("Refresh", viewName)
+        PrintYellow("Refresh ==>>", viewName)
     end
     if NeedRefresh(viewName) then
         local data = this.GetViewData(viewName)
@@ -497,7 +557,7 @@ end
 
 function UIManager.Hide(viewName)
     if Local.LogModuals.UIManager then
-        PrintYellow("Hide", viewName)
+        PrintYellow("Hide ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     data.hideTime = Time.time
@@ -522,7 +582,7 @@ end
 
 function UIManager.HideImmediate(viewName)
     if Local.LogModuals.UIManager then
-        PrintYellow("HideImmediate", viewName)
+        PrintYellow("HideImmediate ==>>", viewName)
     end
     local data = this.GetViewData(viewName)
     data.hideTime = Time.time
@@ -545,14 +605,14 @@ function UIManager.Destroy(viewName)
         end
         data.fields = nil
     end
-    views[viewName] = nil
+    _views[viewName] = nil
     assert(loaded[this.GetModuleName(viewName)])
     loaded[this.GetModuleName(viewName)] = nil
     GameObject.Destroy(data.gameObject)
 end
 
 function UIManager.HideAll()
-    for name, data in pairs(views) do
+    for name, data in pairs(_views) do
         this.Hide(name)
     end
 end
@@ -575,7 +635,7 @@ function UIManager.DestroyAllDlgs()
             end
         end
     end
-    dialogStack:Clear()
+    _dialogStack:Clear()
     if CallBackDestroyAllDlgs then
         CallBackDestroyAllDlgs()
         CallBackDestroyAllDlgs = nil
@@ -586,6 +646,91 @@ function UIManager.OnLogout()
     this.HideAll()
 end
 
+--Tab类型界面控制
+function UIManager.ShowTab(tabName, params)
+    if _dialogStack:Count() > 0 then
+        local viewName = _dialogStack:Peek()
+        if Local.LogModuals.UIManager then
+            print("ShowTab ==>>", viewName, tabName)
+            PrintTable(params)
+        end
+        local data = this.GetViewData(viewName)
+        data.tabGroupStates[data.tabIndex][tabName] = true
+        OnShowTab(viewName, tabName, params)
+    end
+end
+
+function UIManager.HideTab(tabName)
+    if _dialogStack:Count() > 0 then
+        local viewName = _dialogStack:Peek()
+        if Local.LogModuals.UIManager then
+            PrintYellow("HideTab ==>>", viewName, tabName)
+        end
+        local data = this.GetViewData(viewName)
+        if Local.LogModuals.UIManager then
+            PrintTable(data.tabGroupStates)
+        end
+        data.tabGroupStates[data.tabIndex][tabName] = false
+        OnHideTab(viewName, tabName)
+    end
+end
+
+function UIManager.GetDialog(viewName)
+    if _dialogConfigs == nil then
+        print("GetDialog Error! Dialog CSV Not Loaded!", viewName)
+        return nil
+    end
+    return _dialogConfigs[viewName]
+end
+
+function UIManager.GetTabGroup(viewName, tabIndex)
+    local dialog = this.GetDialog(viewName)
+
+    if dialog == nil then
+        print("GetTabGroup Error! No TabGroup!", viewName, tabIndex)
+        return nil
+    end
+    return dialog.tabgroups[tabIndex]
+end
+
+function UIManager.ShowTabByIndex(viewName, tabIndex, params)
+    if Local.LogModuals.UIManager then
+        PrintYellow("ShowTabByIndex ==>>", viewName, tabIndex)
+    end
+    local data = this.GetViewData(viewName)
+    local tabgroup = this.GetTabGroup(viewName, tabIndex)
+    if tabgroup then
+        data.tabIndex = tabIndex
+        if data.tabGroupStates[data.tabIndex] == nil then
+            data.tabGroupStates[data.tabIndex] = {}
+            for _, tab in ipairs(tabgroup.tabs) do
+                data.tabGroupStates[data.tabIndex][tab.tabname] = not tab.hide
+            end
+        end
+        if Local.LogModuals.UIManager then
+            PrintTable(data.tabGroupStates)
+        end
+        for tabName, isShow in pairs(data.tabGroupStates[data.tabIndex]) do
+            if isShow then
+                OnShowTab(viewName, tabName, params)
+            end
+        end
+    end
+end
+
+function UIManager.HideTabByIndex(viewName, tabIndex)
+    if Local.LogModuals.UIManager then
+        print("HideTabByIndex ==>>", viewName, tabIndex)
+    end
+    local tabgroup = this.GetTabGroup(viewName, tabIndex)
+    if tabgroup then
+        for _, tab in ipairs(tabgroup.tabs) do
+            OnHideTab(viewName, tab.tabName)
+        end
+    end
+    --local NoviceGuideTrigger = require "noviceguide.noviceguide_trigger"
+    --NoviceGuideTrigger.HideDialog(viewName)
+end
 
 
 
@@ -594,7 +739,7 @@ end
 ------------------------------------------------------------------
 function UIManager.ShowMaincityDlgs()
     if Local.LogModuals.UIManager then
-        PrintYellow("ShowMaincityDlgs")
+        print("ShowMaincityDlgs ==>>")
     end
     for _, dlg in pairs(Local.MaincityDlgList) do
         if not this.IsShow(dlg) then
@@ -605,7 +750,7 @@ end
 
 function UIManager.HideMainCityDlgs()
     if Local.LogModuals.UIManager then
-        PrintYellow("HideMainCityDlgs")
+        print("HideMainCityDlgs ==>>")
     end
     for _, dlg in pairs(Local.MaincityDlgList) do
         if this.IsShow(dlg) then
@@ -631,7 +776,7 @@ end
 
 function UIManager.ShowDialog(viewName, params, tabIndex)
     if Local.LogModuals.UIManager then
-        PrintYellow("ShowDialog", viewName)
+        print("ShowDialog ==>>", viewName)
         PrintTable(params)
     end
     -- 在showdialog之前隐藏其它窗口
@@ -642,12 +787,12 @@ function UIManager.ShowDialog(viewName, params, tabIndex)
     end
     local data = this.GetViewData(viewName)
     data.isDialog = true
-    data.initedTabs = {} -- tab_name,true
+    data.isInitedTabs = {} -- tab_name,true
     data.tabGroupStates = {}
     data.dialogViewName = viewName
 
-    if not dialogStack:IsEmpty() then
-        local lastViewName = dialogStack:Top()
+    if _dialogStack:Count() > 0 then
+        local lastViewName = _dialogStack:Peek()
         if lastViewName == viewName then
             return
         end
@@ -656,9 +801,9 @@ function UIManager.ShowDialog(viewName, params, tabIndex)
         this.HideMainCityDlgs()
     end
 
-    dialogStack:Push(viewName)
+    _dialogStack:Push(viewName)
     if Local.LogModuals.UIManager then
-        dialogStack:Print()
+        PrintTable(_dialogStack:ToTable())
     end
 
     if this.HasScript(viewName) then
@@ -679,12 +824,12 @@ end
 
 function UIManager.Hidedialog(viewName, isImmediate)
     if Local.LogModuals.UIManager then
-        PrintYellow("HideDialog", viewName)
+        print("HideDialog ==>>", viewName)
     end
-    if dialogStack:IsEmpty() then
+    if _dialogStack:Count() == 0 then
         return
     else
-        local currentViewName = dialogStack:Top()
+        local currentViewName = _dialogStack:Peek()
         if currentViewName ~= viewName then
             return
         end
@@ -692,7 +837,7 @@ function UIManager.Hidedialog(viewName, isImmediate)
     local data = this.GetViewData(viewName)
     local tabGroup = this.gettabgroup(viewName, data.tabIndex)
     if tabGroup then
-        this.hidetabbyindex(viewName, data.tabIndex)
+        this.HideTabByIndex(viewName, data.tabIndex)
     end
     if this.HasScript(viewName) then
         if (this.HasMethod(viewName, "HideDialog")) then
@@ -702,10 +847,10 @@ function UIManager.Hidedialog(viewName, isImmediate)
         end
     end
 
-    dialogStack:Pop()
+    _dialogStack:Pop()
 
-    if not dialogStack:IsEmpty() then
-        local lastview_name = dialogStack:Top()
+    if _dialogStack:Count() > 0 then
+        local lastview_name = _dialogStack:Peek()
         ShowLoadedView(lastview_name)
     else
         this.ShowMaincityDlgs()
@@ -716,46 +861,43 @@ function UIManager.Hidedialog(viewName, isImmediate)
         end
     end
     if Local.LogModuals.UIManager then
-        dialogStack:Print()
+        PrintTable(_dialogStack:ToTable())
     end
     --local NoviceGuideTrigger = require "noviceguide.noviceguide_trigger"
     --NoviceGuideTrigger.HideDialog(viewName)
 end
 
 function UIManager.CurrentDialogName()
-    if dialogStack:IsEmpty() then
-        return "-"
+    if _dialogStack:Count() == 0 then
+        return "Stack Is Empty!"
     else
-        return dialogStack:Top()
+        return _dialogStack:Peek()
     end
 end
 
 function UIManager.CloseAllDialog()
-
-    if not dialogStack:IsEmpty() then
-        local lastViewName = dialogStack:Top()
+    if _dialogStack:Count() > 0 then
+        local lastViewName = _dialogStack:Peek()
         if (this.HasMethod(lastViewName, "HideDialog")) then
             this.Call(lastViewName, "HideDialog")
         else
             this.Hide(lastViewName)
         end
-        dialogStack:Clear()
+        _dialogStack:Clear()
         this.ShowMaincityDlgs()
         this.Hide("dlgdialog")
     end
 end
 
-
-
 ------------------------------------------------------------------
 ---下面是公用弹窗的用法
 ------------------------------------------------------------------
 ShowLoading = function(beginTime, endTime)
-    if isLocked == true then
+    if _isLocked == true then
         return
     end
     if Local.LogModuals.UIManager then
-        PrintYellow("ShowLoading")
+        print("ShowLoading ==>>")
     end
     local params = { beginTime = TernaryOperation(beginTime, beginTime, 0.5), endTime = TernaryOperation(endTime, endTime, 3) }
     if this.IsShow("dlgopenloading") then
@@ -765,11 +907,11 @@ ShowLoading = function(beginTime, endTime)
     end
 end
 HideLoading = function()
-    if isLocked == true then
+    if _isLocked == true then
         return
     end
     if Local.LogModuals.UIManager then
-        PrintYellow("hideloading")
+        print("HideLoading ==>>")
     end
     this.Hide("dlgopenloading")
 end
@@ -796,7 +938,7 @@ function UIManager.PlayUIParticleSystem(go, callback)
         particles[1]:Stop(true)
         particles[1]:Play(true)
         if callback then
-            table.insert(playingParticleSystems, { particle = particles[1], callback = callback, time = 0 })
+            table.insert(_playingParticleSystems, { particle = particles[1], callback = callback, time = 0 })
         end
     end
 end
@@ -830,6 +972,5 @@ function UIManager.IsStopped(go)
     end
     return true
 end
-
 
 return UIManager

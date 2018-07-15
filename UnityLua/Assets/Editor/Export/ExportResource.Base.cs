@@ -37,7 +37,7 @@ public partial class ExportResource
                 break;
             default:
                 {
-                    platformPath = "Windows";
+                    platformPath = "GamePlayer";
                 }
                 break;
         }

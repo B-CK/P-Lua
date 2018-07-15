@@ -104,8 +104,13 @@ namespace LuaFramework
             }
 
             byte[] stream = null;
-            string uri = string.Empty;
-            uri = Util.DataPath + AppConst.AssetDir;
+#if UNITY_EDITOR
+            string uri = Util.AppContentPath() + "/GamePlayer";
+#elif UNITY_ANDROID
+            string uri = Util.AppContentPath() + "/Android";
+#elif UNITY_IOS
+            string uri = Util.AppContentPath() + "/IOS";
+#endif
             if (!File.Exists(uri)) return;
             stream = File.ReadAllBytes(uri);
             var assetbundle = AssetBundle.LoadFromMemory(stream);
@@ -317,7 +322,7 @@ namespace LuaFramework
         }
         private IEnumerator LoadBundleFromWWW(AssetLoadTask task)
         {
-            string path = Util.DataPath + task.path;
+            string path = Util.AppContentPath() + task.path;
             var www = new WWW(path);
             yield return www;
             if (null != www.error)
@@ -327,7 +332,7 @@ namespace LuaFramework
         }
         private void LoadBundleFromFile(AssetLoadTask task)
         {
-            string path = Util.DataPath + task.path;
+            string path = Util.AppContentPath() + task.path;
             AssetBundle ab = AssetBundle.LoadFromFile(path);
             OnBundleLoaded(task, ab);
         }

@@ -19,9 +19,9 @@ public class LuaFramework_UtilWrap
 		L.RegFunction("md5file", md5file);
 		L.RegFunction("ClearChild", ClearChild);
 		L.RegFunction("ClearMemory", ClearMemory);
+		L.RegFunction("AppContentPath", AppContentPath);
 		L.RegFunction("GetRelativePath", GetRelativePath);
 		L.RegFunction("GetFileText", GetFileText);
-		L.RegFunction("AppContentPath", AppContentPath);
 		L.RegFunction("Log", Log);
 		L.RegFunction("LogWarning", LogWarning);
 		L.RegFunction("LogError", LogError);
@@ -31,7 +31,6 @@ public class LuaFramework_UtilWrap
 		L.RegFunction("New", _CreateLuaFramework_Util);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("DataPath", get_DataPath, null);
-		L.RegVar("ScriptPath", get_ScriptPath, null);
 		L.RegVar("NetAvailable", get_NetAvailable, null);
 		L.RegVar("IsWifi", get_IsWifi, null);
 		L.EndClass();
@@ -297,6 +296,22 @@ public class LuaFramework_UtilWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AppContentPath(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			string o = LuaFramework.Util.AppContentPath();
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetRelativePath(IntPtr L)
 	{
 		try
@@ -320,22 +335,6 @@ public class LuaFramework_UtilWrap
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
 			string o = LuaFramework.Util.GetFileText(arg0);
-			LuaDLL.lua_pushstring(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int AppContentPath(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 0);
-			string o = LuaFramework.Util.AppContentPath();
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}
@@ -450,20 +449,6 @@ public class LuaFramework_UtilWrap
 		try
 		{
 			LuaDLL.lua_pushstring(L, LuaFramework.Util.DataPath);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_ScriptPath(IntPtr L)
-	{
-		try
-		{
-			LuaDLL.lua_pushstring(L, LuaFramework.Util.ScriptPath);
 			return 1;
 		}
 		catch (Exception e)

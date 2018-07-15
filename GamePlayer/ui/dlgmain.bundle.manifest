@@ -40,4 +40,4 @@ ClassTypes:
 Assets:
 - Assets/Interface/Prefabs/DlgMain.prefab
 Dependencies:
-- F:/__GitHub/P-Lua/UnityLua/Assets/../../Windows/texture/t_texture_activity_03.bundle
+- F:/__GitHub/P-Lua/UnityLua/Assets/../../GamePlayer/texture/t_texture_activity_03.bundle

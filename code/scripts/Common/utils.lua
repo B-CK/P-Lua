@@ -22,6 +22,7 @@ local Bit = Bit
 local Util = Util
 
 local Utils = {}
+local this = Utils
 
 function Utils.SwapValue(t, a, b)
     local temp = t[a]
@@ -33,7 +34,7 @@ function Utils.TableSort(t, cmp)
     for i = 1, #t do
         for j = #t, i + 1, -1 do
             if not cmp(t[j - 1], t[j]) then
-                SwapValue(t, j, j - 1)
+                this.SwapValue(t, j, j - 1)
             end
         end
     end
@@ -77,8 +78,8 @@ function Utils.CompareList(list1, list2, cmp)
             return false
         else
             if cmp then
-                TableSort(list1, cmp)
-                TableSort(list2, cmp)
+                this.TableSort(list1, cmp)
+                this.TableSort(list2, cmp)
             else
                 sort(list1)
                 sort(list2)
@@ -101,7 +102,7 @@ end
 function Utils.Myxpcall(func, data)
     return xpcall(function()
         func(data)
-    end, Utils.ErrHandler)
+    end, this.ErrHandler)
 end
 
 function Utils.ArrayToSet(t)
@@ -181,7 +182,7 @@ function Utils.DeepCopy(src, dst)
             dst[k] = v
         else
             dst[k] = dst[k] or {}
-            DeepCopy(v, dst[k])
+            this.DeepCopy(v, dst[k])
         end
     end
 end
@@ -206,7 +207,7 @@ function Utils.CopyTable(src)
     local k, v;
     for k, v in pairs(src) do
         if type(v) == "table" then
-            inst[k] = CopyTable(v);
+            inst[k] = this.CopyTable(v);
         else
             inst[k] = v;
         end
@@ -222,7 +223,7 @@ function Utils.CreateObj(template, obj)
     for k, v in pairs(template) do
         if (not inst[k]) and type(v) ~= "function" then
             if type(v) == "table" and v ~= template then
-                inst[k] = CopyTable(v);
+                inst[k] = this.CopyTable(v);
             end
         end
     end
@@ -376,7 +377,7 @@ function Utils.IsExsception(val)
             file:close()
         end
     end
-    local ret = BinSearch(exceptions_mask, val)
+    local ret = this.BinSearch(exceptions_mask, val)
     if ret then
         PrintYellow("IsExsception")
     end
@@ -445,7 +446,7 @@ function Utils.CheckName(name)
             exceptions_mask = nil
             return false, errmgr.GetErrorText(2803)
         end
-        if IsCharacter(bt) then
+        if this.IsCharacter(bt) then
             len = len + 1
         else
             local code_len = 0
@@ -462,9 +463,9 @@ function Utils.CheckName(name)
                     local sbt = string.byte(name, k + i - 1)
                     table.insert(bytes, sbt)
                 end
-                local val = GetBytesValue(bytes, code_len)
+                local val = this.GetBytesValue(bytes, code_len)
                 -- PrintYellow("val = ",val)
-                if IsChinese(val) or IsExsception(val) then
+                if this.IsChinese(val) or this.IsExsception(val) then
                     k = k + code_len - 1
                     len = len + 1
                 else

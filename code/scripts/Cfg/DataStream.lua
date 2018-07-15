@@ -2,7 +2,7 @@ local lower = string.lower
 local setmetatable = setmetatable
 local tonumber = tonumber
 
-local root = Util.DataPath .. '../../../Code/Config/'
+local root = Util.DataPath
 
 local Stream = {}
 Stream.__index = Stream

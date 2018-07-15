@@ -7,7 +7,7 @@ require "Common.Functions"
 
 --模块管理器初始化
 local _modules = {
-
+    "Logic.UIManager"
 }
 
 function Main()

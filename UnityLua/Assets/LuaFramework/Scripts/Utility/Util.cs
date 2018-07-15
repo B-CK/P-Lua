@@ -224,41 +224,48 @@ namespace LuaFramework
         {
             get
             {
-                string game = AppConst.AppName.ToLower();
                 if (Application.isMobilePlatform)
                 {
-                    return Application.persistentDataPath + "/" + game + "/";
+                    return Application.persistentDataPath + "/Config/";
                 }
                 if (AppConst.DebugMode)
                 {
-                    return Application.dataPath + "/" + AppConst.AssetDir + "/";
+                    return Application.dataPath + "/../../GamePlayer/Config/";
                 }
-                if (Application.platform == RuntimePlatform.OSXEditor)
-                {
-                    int i = Application.dataPath.LastIndexOf('/');
-                    return Application.dataPath.Substring(0, i + 1) + game + "/";
-                }
+                string game = AppConst.AppName.ToLower();
                 return Application.dataPath + "/../../" + game + "/";
             }
         }
 
         /// <summary>
-        /// lua脚本目录,不包含底层脚本
+        /// 应用程序内容路径
         /// </summary>
-        public static string ScriptPath
+        public static string AppContentPath()
         {
-            get
+            string path = string.Empty;
+            switch (Application.platform)
             {
-                if (AppConst.DebugMode)
-                    return LuaConst.luaDir + "/";
-                return LuaConst.luaResDir + "script/";
+                case RuntimePlatform.Android:
+                    path = "jar:file://" + Application.dataPath + "!/assets/";
+                    break;
+                case RuntimePlatform.IPhonePlayer:
+                    path = Application.dataPath + "/Raw/";
+                    break;
+                case RuntimePlatform.WindowsPlayer:
+                    path = "file://" + Application.streamingAssetsPath + "/";
+                    break;
+                case RuntimePlatform.WindowsEditor:
+                case RuntimePlatform.OSXEditor:
+                    path = Application.dataPath + "/../../GamePlayer/";
+                    break;
             }
+            return path;
         }
 
         public static string GetRelativePath()
         {
             if (Application.isEditor)
-                return "file://" + System.Environment.CurrentDirectory.Replace("\\", "/") + "/Assets/" + AppConst.AssetDir + "/";
+                return "file://" + System.Environment.CurrentDirectory.Replace("\\", "/") + "/../Window/";
             else if (Application.isMobilePlatform || Application.isConsolePlatform)
                 return "file:///" + DataPath;
             else // For standalone player.
@@ -293,27 +300,6 @@ namespace LuaFramework
             {
                 return Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
             }
-        }
-
-        /// <summary>
-        /// 应用程序内容路径
-        /// </summary>
-        public static string AppContentPath()
-        {
-            string path = string.Empty;
-            switch (Application.platform)
-            {
-                case RuntimePlatform.Android:
-                    path = "jar:file://" + Application.dataPath + "!/assets/";
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                    path = Application.dataPath + "/Raw/";
-                    break;
-                default:
-                    path = Application.dataPath + "/" + AppConst.AssetDir + "/";
-                    break;
-            }
-            return path;
         }
 
         public static void Log(string str)
