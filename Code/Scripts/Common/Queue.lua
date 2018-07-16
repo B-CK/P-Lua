@@ -1,10 +1,11 @@
 local list = list
 local ilist = ilist
 
----@class Queue
+---@class Queue:list
 local Queue = Class:new(list)
 
 function Queue:new()
+    ---@type Queue
     local o = list:new()
     setmetatable(o, self)
     return o

@@ -3,10 +3,11 @@ local ilist = ilist
 local rilist = rilist
 local LuaUtils = LuaUtils
 
----@class List
+---@class List:list
 local List = Class:new(list)
 
 function List:new()
+    ---@type List
     local o = list:new()
     setmetatable(o, self)
     return o
