@@ -1,12 +1,15 @@
 ﻿namespace CS.ModelAction
 {
     using Csv;
+    using System;
     using UnityEngine;
+    using UnityEditor;
     using Sirenix.Utilities;
     using Sirenix.OdinInspector;
     using Sirenix.Utilities.Editor;
     using System.Collections.Generic;
     using Lson.Skill;
+    using System.IO;
 
     [GlobalConfig("Editor/ModelAction/Config", UseAsset = true)]
     internal class ActionHomeConfig : GlobalConfig<ActionHomeConfig>
@@ -23,37 +26,76 @@
         };
 
         [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
-        [ShowInInspector, ReadOnly, LabelText("配置存储目录"), PropertyOrder(-100)]
+        [ShowInInspector, LabelText("配置存储目录"), PropertyOrder(-100)]
         /// <summary>
         /// 路径相对于Asset
         /// </summary>
         public string ActionConfigPath { get { return Application.dataPath + "/../../Csv/Skill/ActionConfig/"; } }
-        public Dictionary<GroupType, List<ModelActionEditor>> ModelGroupDict { get { return _modelGroupDict; } }
+        [FolderPath(RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [LabelText("Csv存储目录"), PropertyOrder(-99)]
+        public string ConfigRelativeDir = "";
         public Dictionary<string, string> CheckResults = new Dictionary<string, string>();
+        public Dictionary<GroupType, List<ModelActionConfigEditor>> ModelGroupDict = new Dictionary<GroupType, List<ModelActionConfigEditor>>();
+    }
 
+    [Serializable]
+    internal class HomeConfigPreview
+    {
         /// <summary>
         /// 剪切板
         /// </summary>
         private List<ModelActionEditor> _clipboard = new List<ModelActionEditor>();
-        private Dictionary<GroupType, List<ModelActionEditor>> _modelGroupDict = new Dictionary<GroupType, List<ModelActionEditor>>();
+        private ActionHomeConfig _config;
+        private static HomeConfigPreview _instance;
 
+        public static HomeConfigPreview Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new HomeConfigPreview();
+                return _instance;
+            }
+        }
 
-        //1.加载所需配置                  --不在主页显示
-        //2.显示配置错误信息              --在主页显示
-        //3.创建配置
-        //4.删除配置
-        //5.检查配置
+        public void Init()
+        {
+            _config = ActionHomeConfig.Instance;
+            LoadAll();
+        }
+
+        [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [ShowInInspector, ReadOnly, LabelText("配置存储目录"), PropertyOrder(-100)]
+        /// <summary>
+        /// 路径相对于Asset
+        /// </summary>
+        public string ActionConfigPath { get { return _config.ActionConfigPath; } }
+        [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [ShowInInspector, ReadOnly, LabelText("Csv存储目录"), PropertyOrder(-99)]
+        public string ConfigDir { get { return string.Format("{0}/../{1}/", Application.dataPath, _config.ConfigRelativeDir); } }
+
+        public Dictionary<GroupType, List<ModelActionConfigEditor>> ModelGroupDict { get { return _config.ModelGroupDict; } }
+
 
         [ButtonGroup("Config/Btns")]
         [Button("加载所有动作", ButtonSizes.Large)]
-        /// <summary>
-        /// 加载配置
-        /// </summary>
         public void LoadAll()
         {
-            ClearAll();
-            CfgManager.ConfigDir = Application.dataPath + "/../../GamePlayer/Config/";
+            ModelGroupDict.Clear();
+            CfgManager.ConfigDir = ConfigDir;
             CfgManager.LoadAll();
+            string[] files = Directory.GetFiles(ActionConfigPath, "*.xml", SearchOption.TopDirectoryOnly);
+            foreach (var path in files)
+            {
+                var editor = XmlUtil.Deserialize(path, typeof(ModelActionConfigEditor)) as ModelActionConfigEditor;
+                if (_config.ModelGroupDict.ContainsKey(editor.GroupType))
+                    ModelGroupDict[editor.GroupType].Add(editor);
+                else
+                {
+                    ModelGroupDict.Add(editor.GroupType, new List<ModelActionConfigEditor>());
+                    ModelGroupDict[editor.GroupType].Add(editor);
+                }
+            }
         }
 
 
@@ -70,13 +112,6 @@
             }
         }
 
-        /// <summary>
-        /// 清除Xml加载数据
-        /// </summary>
-        public void ClearAll()
-        {
-
-        }
         public void ClearTemp()
         {
 
@@ -85,6 +120,30 @@
         public void UpdateClipbord(List<ModelActionEditor> editors)
         {
             _clipboard = editors;
+        }
+
+        public void Destroy()
+        {
+            //保存所有配置
+            foreach (var group in ModelGroupDict)
+            {
+                float count = 0;
+                foreach (var cfg in group.Value)
+                {
+                    if (group.Key == GroupType.None)
+                        cfg.Delete();
+                    else
+                        cfg.Save();
+                    EditorUtility.DisplayProgressBar("导出所有配置>" + cfg.Group, cfg.Path, count / group.Value.Count);
+                }
+            }
+            EditorUtility.ClearProgressBar();
+            ModelGroupDict.Clear();
+            CfgManager.Clear();
+            _clipboard.Clear();
+            _config.ModelGroupDict.Clear();
+
+            _instance = null;
         }
     }
 }

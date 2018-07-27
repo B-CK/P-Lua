@@ -7,7 +7,7 @@
     using UnityEngine;
 
     [Serializable]
-    internal class ModelActionEditor
+    public class ModelActionEditor
     {
         private readonly Dictionary<ActionSourceType, string> _actionSources = new Dictionary<ActionSourceType, string>
         {
@@ -18,6 +18,8 @@
         private bool _isOverride = false;
         private bool _hasClip = true;
         private bool _isSkillAction = false;
+
+        public ModelActionEditor() { }
         public ModelActionEditor(ModelAction modelAction, bool isSkill)
         {
             _modelAction = modelAction;

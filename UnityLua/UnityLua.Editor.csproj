@@ -416,6 +416,7 @@
     <Compile Include="Assets\Editor\ModelAction\ModelActionConfigEditor.cs" />
     <Compile Include="Assets\Editor\ModelAction\ModelActionEditor.cs" />
     <Compile Include="Assets\Editor\ModelAction\SimplePopupCreator.cs" />
+    <Compile Include="Assets\Editor\XmlUtil.cs" />
     <Compile Include="Assets\LuaFramework\Editor\CustomSettings.cs" />
     <Compile Include="Assets\LuaFramework\Editor\Examples\01_HelloWorld\HelloWorld.cs" />
     <Compile Include="Assets\LuaFramework\Editor\Examples\02_ScriptsFromFile\ScriptsFromFile.cs" />

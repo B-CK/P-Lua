@@ -17,22 +17,29 @@
             var window = GetWindow<ActionWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
             ActionHomeConfig.LoadInstanceIfAssetExists();
-            ActionHomeConfig.Instance.LoadAll();
+            HomeConfigPreview.Instance.Init();
         }
 
         GUIContent _createConfig = new GUIContent("创建动作配置");
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            OdinMenuTree tree = new OdinMenuTree(supportsMultiSelect: false)
-            {
-                { "主页", ActionHomeConfig.Instance, EditorIcons.House },
-            };
+            OdinMenuTree tree = new OdinMenuTree(supportsMultiSelect: false);
             tree.Config.DrawSearchToolbar = true;
             foreach (var item in ActionHomeConfig.MenuItems)
             {
                 if (item.Key != GroupType.None)
                     tree.Add(item.Value, null, EditorIcons.Table);
+                else
+                    tree.Add("主页", HomeConfigPreview.Instance, EditorIcons.House);
+            }
+            foreach (var group in HomeConfigPreview.Instance.ModelGroupDict)
+            {
+                foreach (var item in group.Value)
+                {
+                    string path = string.Format("{0}/{1}", item.Group, item.BaseName);
+                    tree.Add(path, item);
+                }
             }
 
             return tree;
@@ -52,9 +59,7 @@
 
                 if (SirenixEditorGUI.ToolbarButton(_createConfig))
                 {
-                    var configEditor = ModelActionConfigEditor.Create();
-                    if (configEditor != null)
-                        MenuTree.Add("主页/" + configEditor.Name, configEditor);
+                    ModelActionConfigEditor.Create(cfg => MenuTree.AddObjectAtPath("主页/" + cfg.Name, cfg));
                 }
             }
             SirenixEditorGUI.EndHorizontalToolbar();
@@ -63,9 +68,10 @@
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Csv.CfgManager.Clear();
+
+            HomeConfigPreview.Instance.Destroy();
+
             EditorUtility.UnloadUnusedAssetsImmediate(true);
-            ActionHomeConfig.Instance.ClearAll();
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
         }

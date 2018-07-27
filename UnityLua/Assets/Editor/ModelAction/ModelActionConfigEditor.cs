@@ -1,22 +1,22 @@
 ﻿namespace CS.ModelAction
 {
     using System;
+    using System.IO;
     using Lson.Skill;
     using Sirenix.OdinInspector;
     using System.Collections.Generic;
     using Sirenix.OdinInspector.Editor;
-    using System.IO;
-    using System.Xml;
+    using System.Linq;
 
     [Serializable]
-    internal class ModelActionConfigEditor
+    public class ModelActionConfigEditor
     {
         /// <summary>
         /// 创建角色动作行为配置文本
         /// 每个角色只能有一套配置
         /// </summary>
         /// <returns></returns>
-        public static ModelActionConfigEditor Create()
+        public static void Create(Action<ModelActionConfigEditor> Result)
         {
             ModelActionConfigEditor model = null;
             var models = Csv.CfgManager.Model.Keys;
@@ -27,16 +27,35 @@
                     ModelName = name,
                     GroupType = GroupType.None,
                 };
-                model = new ModelActionConfigEditor(config);
+                string path = string.Format("{0}{1}.xml", ActionHomeConfig.Instance.ActionConfigPath, name);
+                XmlUtil.Serialize(path, config);
+                model = new ModelActionConfigEditor(path);
+                if (Result != null) Result(model);
             });
-            return model;
+        }
+        public ModelActionConfigEditor() { }
+        public ModelActionConfigEditor(string path)
+        {
+            _path = path;
+            _modelActionCfg = XmlUtil.Deserialize(path, typeof(ModelActionConfig)) as ModelActionConfig;
         }
 
+
         private ModelActionConfig _modelActionCfg;
-        ModelActionConfigEditor(ModelActionConfig modelActionCfg)
+        private string _path;
+
+        public void Save()
         {
-            _modelActionCfg = modelActionCfg;
+            XmlUtil.Serialize(_path, _modelActionCfg);
         }
+        public void Delete()
+        {
+            if (File.Exists(_path))
+                File.Delete(_path);
+        }
+
+        public string Path { get { return _path; } }
+        public GroupType GroupType { get { return _modelActionCfg.GroupType; } }
 
         [LabelText("模型分组类型")]
         public string Group
@@ -50,8 +69,17 @@
                 if (value.Equals(ActionHomeConfig.MenuItems[_modelActionCfg.GroupType])) return;
 
                 _modelActionCfg.GroupType = ActionHomeConfig.MenuItems.GetKey(value);
-                //调整分组
-                //TODO
+
+                //切换分组
+                ActionWindow window = ActionWindow.GetWindow<ActionWindow>();
+                OdinMenuItem item = window.MenuTree.Selection.FirstOrDefault();
+                if (item != null)
+                {
+                    item.Parent.ChildMenuItems.Remove(item);
+                    var groupItem = window.MenuTree.GetMenuItem(value);
+                    groupItem.ChildMenuItems.Add(item);
+                    item.Select();
+                }
             }
         }
 
