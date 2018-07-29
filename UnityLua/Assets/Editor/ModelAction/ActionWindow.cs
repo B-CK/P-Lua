@@ -16,6 +16,7 @@
         {
             var window = GetWindow<ActionWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+            window.minSize = new Vector2(400, 500);
             ActionHomeConfig.LoadInstanceIfAssetExists();
             HomeConfigPreview.Instance.Init();
         }
@@ -37,8 +38,7 @@
             {
                 foreach (var item in group.Value)
                 {
-                    string path = string.Format("{0}/{1}", item.Group, item.BaseName);
-                    tree.Add(path, item);
+                    tree.Add(item.MenuItemName, item);
                 }
             }
 
@@ -59,7 +59,11 @@
 
                 if (SirenixEditorGUI.ToolbarButton(_createConfig))
                 {
-                    ModelActionConfigEditor.Create(cfg => MenuTree.AddObjectAtPath("主页/" + cfg.Name, cfg));
+                    ModelActionConfigEditor.Create((model) =>
+                    {
+                        HomeConfigPreview.Instance.AddModel(model);
+                        MenuTree.AddObjectAtPath(model.MenuItemName, model);
+                    });
                 }
             }
             SirenixEditorGUI.EndHorizontalToolbar();
@@ -74,6 +78,8 @@
             EditorUtility.UnloadUnusedAssetsImmediate(true);
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
+
+            Debug.Log("Close Action Windows~~");
         }
     }
 }

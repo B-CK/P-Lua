@@ -24,6 +24,7 @@
             {GroupType.Monster, "怪物" },
             {GroupType.NPC, "NPC" },
         };
+        public static string[] MenuItemNames = { "主页", "玩家", "怪物", "NPC" };
 
         [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
         [ShowInInspector, LabelText("配置存储目录"), PropertyOrder(-100)]
@@ -81,23 +82,36 @@
         [Button("加载所有动作", ButtonSizes.Large)]
         public void LoadAll()
         {
-            ModelGroupDict.Clear();
+            ClearAll();
             CfgManager.ConfigDir = ConfigDir;
             CfgManager.LoadAll();
             string[] files = Directory.GetFiles(ActionConfigPath, "*.xml", SearchOption.TopDirectoryOnly);
             foreach (var path in files)
             {
-                var editor = XmlUtil.Deserialize(path, typeof(ModelActionConfigEditor)) as ModelActionConfigEditor;
-                if (_config.ModelGroupDict.ContainsKey(editor.GroupType))
-                    ModelGroupDict[editor.GroupType].Add(editor);
-                else
+                AddModel(new ModelActionConfigEditor(path));
+            }
+
+            Debug.Log("加载所有动作 完毕!");
+        }
+        [ButtonGroup("Config/Btns")]
+        [Button("保存所有配置", ButtonSizes.Large)]
+        public void SaveAll()
+        {
+            foreach (var group in ModelGroupDict)
+            {
+                float count = 0;
+                foreach (var cfg in group.Value)
                 {
-                    ModelGroupDict.Add(editor.GroupType, new List<ModelActionConfigEditor>());
-                    ModelGroupDict[editor.GroupType].Add(editor);
+                    if (group.Key == GroupType.None)
+                        cfg.Delete();
+                    else
+                        cfg.Save();
+                    EditorUtility.DisplayProgressBar("导出所有配置>" + cfg.Group, cfg.Path, count / group.Value.Count);
                 }
             }
+            EditorUtility.ClearProgressBar();
+            Debug.Log("所有配置保存完毕~~");
         }
-
 
         /// <summary>
         /// 检查配置
@@ -112,38 +126,44 @@
             }
         }
 
+        public void AddModel(ModelActionConfigEditor model)
+        {
+            if (ModelGroupDict.ContainsKey(model.GroupType))
+                ModelGroupDict[model.GroupType].Add(model);
+            else
+            {
+                ModelGroupDict.Add(model.GroupType, new List<ModelActionConfigEditor>());
+                ModelGroupDict[model.GroupType].Add(model);
+            }
+        }
+        public void RemoveModel(ModelActionConfigEditor model)
+        {
+            if (!ModelGroupDict[model.GroupType].Remove(model))
+                Debug.LogErrorFormat("{0} 无法从分组中移除", model.MenuItemName);
+        }
+
         public void ClearTemp()
         {
 
         }
-
         public void UpdateClipbord(List<ModelActionEditor> editors)
         {
             _clipboard = editors;
         }
-
         public void Destroy()
         {
             //保存所有配置
-            foreach (var group in ModelGroupDict)
-            {
-                float count = 0;
-                foreach (var cfg in group.Value)
-                {
-                    if (group.Key == GroupType.None)
-                        cfg.Delete();
-                    else
-                        cfg.Save();
-                    EditorUtility.DisplayProgressBar("导出所有配置>" + cfg.Group, cfg.Path, count / group.Value.Count);
-                }
-            }
-            EditorUtility.ClearProgressBar();
+            SaveAll();
+            ClearAll();
+
+            _instance = null;
+        }
+
+        private void ClearAll()
+        {
             ModelGroupDict.Clear();
             CfgManager.Clear();
             _clipboard.Clear();
-            _config.ModelGroupDict.Clear();
-
-            _instance = null;
         }
     }
 }

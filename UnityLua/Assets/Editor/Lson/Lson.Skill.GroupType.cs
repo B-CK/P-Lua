@@ -5,9 +5,9 @@ namespace Lson.Skill
 {
 	public enum GroupType
 	{
-		None = -100,
-		Player = 0,
-		Monster = 1,
-		NPC = 2,
+		None = 0,
+		Player = 1,
+		Monster = 2,
+		NPC = 3,
 	}
 }

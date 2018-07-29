@@ -299,10 +299,10 @@
       <Item Name="Foot" Type="int" Des="脚" Group="" Value="2" />
     </Enum>
     <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="GroupType" Group="">
-      <Item Name="None" Type="int" Des="临时组" Group="" Value="-100" />
-      <Item Name="Player" Type="int" Des="玩家" Group="" Value="0" />
-      <Item Name="Monster" Type="int" Des="怪物" Group="" Value="1" />
-      <Item Name="NPC" Type="int" Des="NPC" Group="" Value="2" />
+      <Item Name="None" Type="int" Des="临时组" Group="" Value="0" />
+      <Item Name="Player" Type="int" Des="玩家" Group="" Value="1" />
+      <Item Name="Monster" Type="int" Des="怪物" Group="" Value="2" />
+      <Item Name="NPC" Type="int" Des="NPC" Group="" Value="3" />
     </Enum>
   </EnumInfos>
 </TypeInfo>

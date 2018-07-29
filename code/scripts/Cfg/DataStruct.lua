@@ -441,10 +441,10 @@ GetOrCreate('Cfg.Skill')['TraceBindType'] = {
 }
 GetOrCreate('Cfg.Skill')['GroupType'] = {
 	NULL = -1,
-	None = -100,
-	Player = 0,
-	Monster = 1,
-	NPC = 2,
+	None = 0,
+	Player = 1,
+	Monster = 2,
+	NPC = 3,
 }
 
 return Stream
