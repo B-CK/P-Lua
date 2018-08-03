@@ -10,7 +10,6 @@ namespace Lson
 	{
 		public static List<Lson.AllType.AllClass> AllClass = new List<AllType.AllClass>();
 		public static List<Lson.Card.Card> Card = new List<Card.Card>();
-		public static List<Lson.Skill.ModelActionConfig> ModelActionConfig = new List<Skill.ModelActionConfig>();
 		public static List<Lson.Model.Model> Model = new List<Model.Model>();
 
 		public static T Deserialize<T>(string path)
@@ -52,14 +51,12 @@ namespace Lson
 		{
 			AllClass = Load<Lson.AllType.AllClass>("F:/__GitHub/P-Lua/Tool/../Csv/Data所有Class类型.xlsx");
 			Card = Load<Lson.Card.Card>("F:/__GitHub/P-Lua/Tool/../Csv/卡牌_Card.xlsx");
-			ModelActionConfig = Load<Lson.Skill.ModelActionConfig>("F:/__GitHub/P-Lua/Tool/../Csv/ActionConfig");
 			Model = Load<Lson.Model.Model>("F:/__GitHub/P-Lua/Tool/../Csv/model.xlsx");
 		}
 		public static void Clear()
 		{
 			AllClass.Clear();
 			Card.Clear();
-			ModelActionConfig.Clear();
 			Model.Clear();
 		}
 	}

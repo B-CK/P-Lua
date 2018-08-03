@@ -126,7 +126,7 @@
     </Class>
     <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ModelAction" Group="">
       <Field Name="ActionName" Type="string" Des="行为名称" Group="" />
-      <Field Name="ActionSource" Type="Skill.ActionSourceType" Des="动作来源" Group="" />
+      <Field Name="IsFromOther" Type="bool" Des="动作来源" Group="" />
       <Field Name="OtherModelName" Type="string" Des="其他模型名称,用于套用其他模型动作" Group="" />
       <Field Name="ActionFile" Type="string" Des="绑定的动作名称" Group="" />
       <Field Name="PreActionFile" Type="string" Des="前摇动作名称" Group="" />
@@ -196,7 +196,7 @@
     <List TypeType="List" Name="list&lt;Skill.HitZone&gt;" ItemType="Skill.HitZone" />
     <List TypeType="List" Name="list&lt;Skill.BeAttackEffect&gt;" ItemType="Skill.BeAttackEffect" />
     <List TypeType="List" Name="list&lt;Skill.Attack&gt;" ItemType="Skill.Attack" />
-    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ModelActionConfig" Group="" DataTable="ActionConfig">
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ModelActionConfig" Group="">
       <Field Name="ModelName" Type="string" Des="模型名称" Group="" />
       <Field Name="GroupType" Type="Skill.GroupType" Des="模型分组类型" Group="Editor" />
       <Field Name="BaseModelName" Type="string" Des="基础模型名称" Group="" />
@@ -235,10 +235,6 @@
     </Enum>
     <Enum TypeType="Enum" RelPath="Card\卡牌_Card.xlsx" NamespaceName="Card" Name="CardType" Group="">
       <Item Name="Attack" Type="int" Des="攻击牌" Group="" Value="0" />
-    </Enum>
-    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ActionSourceType" Group="">
-      <Item Name="SelfModel" Type="int" Des="自己模型" Group="" Value="0" />
-      <Item Name="OtherModel" Type="int" Des="其他模型" Group="" Value="1" />
     </Enum>
     <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SkillTargetType" Group="">
       <Item Name="Enemy" Type="int" Des="敌方目标" Group="" Value="0" />
@@ -300,9 +296,10 @@
     </Enum>
     <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="GroupType" Group="">
       <Item Name="None" Type="int" Des="临时组" Group="" Value="0" />
-      <Item Name="Player" Type="int" Des="玩家" Group="" Value="1" />
-      <Item Name="Monster" Type="int" Des="怪物" Group="" Value="2" />
-      <Item Name="NPC" Type="int" Des="NPC" Group="" Value="3" />
+      <Item Name="Base" Type="int" Des="基础类型" Group="" Value="1" />
+      <Item Name="Player" Type="int" Des="玩家" Group="" Value="2" />
+      <Item Name="Monster" Type="int" Des="怪物" Group="" Value="3" />
+      <Item Name="NPC" Type="int" Des="NPC" Group="" Value="4" />
     </Enum>
   </EnumInfos>
 </TypeInfo>

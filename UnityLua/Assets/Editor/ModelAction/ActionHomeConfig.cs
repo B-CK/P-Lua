@@ -20,18 +20,16 @@
         public static readonly Dictionary<GroupType, string> MenuItems = new Dictionary<GroupType, string>()
         {
             {GroupType.None, "主页" },
+            {GroupType.Base, "基础类型" },
             {GroupType.Player, "玩家" },
             {GroupType.Monster, "怪物" },
             {GroupType.NPC, "NPC" },
         };
-        public static string[] MenuItemNames = { "主页", "玩家", "怪物", "NPC" };
+        public static string[] MenuItemNames = { "主页", "基础类型", "玩家", "怪物", "NPC" };
 
-        [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
-        [ShowInInspector, LabelText("配置存储目录"), PropertyOrder(-100)]
-        /// <summary>
-        /// 路径相对于Asset
-        /// </summary>
-        public string ActionConfigPath { get { return Application.dataPath + "/../../Csv/Skill/ActionConfig/"; } }
+        [FolderPath(RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [LabelText("Xml存储目录"), PropertyOrder(-100)]
+        public string ActionConfigPath;
         [FolderPath(RequireValidPath = true), BoxGroup("Config", showLabel: false)]
         [LabelText("Csv存储目录"), PropertyOrder(-99)]
         public string ConfigRelativeDir = "";
@@ -42,12 +40,14 @@
     [Serializable]
     internal class HomeConfigPreview
     {
+        private static HomeConfigPreview _instance;
+
         /// <summary>
         /// 剪切板
         /// </summary>
         private List<ModelActionEditor> _clipboard = new List<ModelActionEditor>();
+        private Dictionary<string, ModelActionConfigEditor> _modelDict = new Dictionary<string, ModelActionConfigEditor>();
         private ActionHomeConfig _config;
-        private static HomeConfigPreview _instance;
 
         public static HomeConfigPreview Instance
         {
@@ -65,13 +65,10 @@
             LoadAll();
         }
 
-        [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
-        [ShowInInspector, ReadOnly, LabelText("配置存储目录"), PropertyOrder(-100)]
-        /// <summary>
-        /// 路径相对于Asset
-        /// </summary>
-        public string ActionConfigPath { get { return _config.ActionConfigPath; } }
-        [FolderPath(AbsolutePath = true, RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [FolderPath(RequireValidPath = true), BoxGroup("Config", showLabel: false)]
+        [ShowInInspector, ReadOnly, LabelText("Xml存储目录"), PropertyOrder(-100)]
+        public string ActionConfigPath { get { return string.Format("{0}/../{1}/", Application.dataPath, _config.ActionConfigPath); } }
+        [FolderPath(RequireValidPath = true), BoxGroup("Config", showLabel: false)]
         [ShowInInspector, ReadOnly, LabelText("Csv存储目录"), PropertyOrder(-99)]
         public string ConfigDir { get { return string.Format("{0}/../{1}/", Application.dataPath, _config.ConfigRelativeDir); } }
 
@@ -89,6 +86,10 @@
             foreach (var path in files)
             {
                 AddModel(new ModelActionConfigEditor(path));
+            }
+            foreach (var item in _modelDict)
+            {
+                item.Value.Init();
             }
 
             Debug.Log("加载所有动作 完毕!");
@@ -126,6 +127,28 @@
             }
         }
 
+        /// <summary>
+        /// 创建角色动作行为配置文本
+        /// 每个角色只能有一套配置
+        /// </summary>
+        /// <returns></returns>
+        public void Create(Action<ModelActionConfigEditor> Result)
+        {
+            ModelActionConfigEditor model = null;
+            var models = Csv.CfgManager.Model.Keys;
+            SimplePopupCreator.ShowDialog(new List<string>(models), (name) =>
+            {
+                var config = new ModelActionConfig()
+                {
+                    ModelName = name,
+                    GroupType = GroupType.None,
+                };
+                string path = string.Format("{0}/{1}.xml", ActionHomeConfig.Instance.ActionConfigPath, name);
+                XmlUtil.Serialize(path, config);
+                model = new ModelActionConfigEditor(path);
+                if (Result != null) Result(model);
+            });
+        }
         public void AddModel(ModelActionConfigEditor model)
         {
             if (ModelGroupDict.ContainsKey(model.GroupType))
@@ -135,12 +158,25 @@
                 ModelGroupDict.Add(model.GroupType, new List<ModelActionConfigEditor>());
                 ModelGroupDict[model.GroupType].Add(model);
             }
+            if (!_modelDict.ContainsKey(model.ModelName))
+                _modelDict.Add(model.ModelName, model);
         }
         public void RemoveModel(ModelActionConfigEditor model)
         {
             if (!ModelGroupDict[model.GroupType].Remove(model))
                 Debug.LogErrorFormat("{0} 无法从分组中移除", model.MenuItemName);
+            if (_modelDict.ContainsKey(model.ModelName))
+                _modelDict.Remove(model.ModelName);
         }
+        public ModelActionConfigEditor GetModelEditor(string modelName)
+        {
+            return _modelDict[modelName];
+        }
+        public List<string> GetAllModelList()
+        {
+            return new List<string>(_modelDict.Keys);
+        }
+
 
         public void ClearTemp()
         {

@@ -14,46 +14,35 @@
     [Serializable]
     public class ModelActionConfigEditor
     {
-        /// <summary>
-        /// 创建角色动作行为配置文本
-        /// 每个角色只能有一套配置
-        /// </summary>
-        /// <returns></returns>
-        public static void Create(Action<ModelActionConfigEditor> Result)
-        {
-            ModelActionConfigEditor model = null;
-            var models = Csv.CfgManager.Model.Keys;
-            SimplePopupCreator.ShowDialog(new List<string>(models), (name) =>
-            {
-                var config = new ModelActionConfig()
-                {
-                    ModelName = name,
-                    GroupType = GroupType.None,
-                };
-                string path = string.Format("{0}{1}.xml", ActionHomeConfig.Instance.ActionConfigPath, name);
-                XmlUtil.Serialize(path, config);
-                model = new ModelActionConfigEditor(path);
-                if (Result != null) Result(model);
-            });
-        }
         public ModelActionConfigEditor() { }
         public ModelActionConfigEditor(string path)
         {
             _path = path;
             _modelActionCfg = XmlUtil.Deserialize(path, typeof(ModelActionConfig)) as ModelActionConfig;
             foreach (var item in _modelActionCfg.ModelActionList)
-                ModelActions.Add(new ModelActionEditor(item, false));
+            {
+                var action = new ModelActionEditor(this, item, false);
+                action.ActState = ModelActionEditor.ActionState.New;
+                ModelActions.Add(action);
+            }
             foreach (var item in _modelActionCfg.SkillActionList)
-                SkillActions.Add(new ModelActionEditor(item, true));
+            {
+                var action = new ModelActionEditor(this, item, true);
+                action.ActState = ModelActionEditor.ActionState.New;
+                SkillActions.Add(action);
+            }
         }
-
+        public void Init()
+        {
+            if (string.IsNullOrEmpty(BaseName)) return;
+            AddBaseModelAction(BaseName);
+        }
 
         private ModelActionConfig _modelActionCfg;
         private string _path;
 
-
         public string Path { get { return _path; } }
-        public string MenuItemName { get { return string.Format("{0}/{1}", ActionHomeConfig.MenuItems[GroupType], Name); } }
+        public string MenuItemName { get { return string.Format("{0}/{1}", ActionHomeConfig.MenuItems[GroupType], ModelName); } }
 
         [BoxGroup("BaseGroup", showLabel: false, order: -100)]
         [VerticalGroup("BaseGroup/Info"), CustomValueDrawer("DrawGroupType")]
@@ -62,7 +51,7 @@
             get { return _modelActionCfg.GroupType; }
             set
             {
-                ActionWindow window = ActionWindow.GetWindow<ActionWindow>();
+                ModelCfgWindow window = ModelCfgWindow.GetWindow<ModelCfgWindow>();
                 OdinMenuItem item = window.MenuTree.Selection.FirstOrDefault();
                 if (item != null)
                 {
@@ -87,27 +76,10 @@
             {
                 return ActionHomeConfig.MenuItems[_modelActionCfg.GroupType];
             }
-            //set
-            //{
-            //    if (value.Equals(ActionHomeConfig.MenuItems[_modelActionCfg.GroupType])) return;
-
-            //    _modelActionCfg.GroupType = ActionHomeConfig.MenuItems.GetKey(value);
-
-            //    //切换分组
-            //    ActionWindow window = ActionWindow.GetWindow<ActionWindow>();
-            //    OdinMenuItem item = window.MenuTree.Selection.FirstOrDefault();
-            //    if (item != null)
-            //    {
-            //        item.Parent.ChildMenuItems.Remove(item);
-            //        var groupItem = window.MenuTree.GetMenuItem(value);
-            //        groupItem.ChildMenuItems.Add(item);
-            //        item.Select();
-            //    }
-            //}
         }
-        [VerticalGroup("BaseGroup/Info"), LabelText("模型名称"), InlineButton("ModifyName", "更换")]
-        public string Name { get { return _modelActionCfg.ModelName; } set { } }
-        [VerticalGroup("BaseGroup/Info"), LabelText("基础模型"), InlineButton("ModifyBaseName", "更换")]
+        [VerticalGroup("BaseGroup/Info"), LabelText("模型名称"), InlineButton("ModifyModelName", "更换")]
+        public string ModelName { get { return _modelActionCfg.ModelName; } set { } }
+        [VerticalGroup("BaseGroup/Info"), LabelText("继承模型"), InlineButton("ModifyBaseName", "更换")]
         public string BaseName { get { return _modelActionCfg.BaseModelName; } set { } }
 
 
@@ -115,14 +87,35 @@
         [ButtonGroup("Button"), Button("复制", ButtonSizes.Large)]
         private void CopyActions()
         {
-
+            List<ModelActionEditor> copy = new List<ModelActionEditor>();
+            foreach (var item in ModelActions)
+                if (item.IsSelected) copy.Add(item);
+            foreach (var item in SkillActions)
+                if (item.IsSelected) copy.Add(item);
+            Clipboard.Copy(copy, CopyModes.DeepCopy);
         }
         [ButtonGroup("Button"), Button("粘贴", ButtonSizes.Large)]
         private void PasteActions()
         {
-
+            List<ModelActionEditor> paste = new List<ModelActionEditor>();
+            if (Clipboard.TryPaste(out paste))
+            {
+                foreach (var item in paste)
+                {
+                    if (item.IsSkillAction)
+                        SkillActions.Add(item);
+                    else
+                        ModelActions.Add(item);
+                    item.IsSelected = false;
+                }
+                Clipboard.Clear();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("粘贴异常", "行为数据粘贴失败,或者无数据可张贴~~", "确定");
+            }
         }
-        [ButtonGroup("Button"), Button("保存", ButtonSizes.Large)]
+        [ButtonGroup("Button"), Button("保存文件", ButtonSizes.Large)]
         public void Save()
         {
             _modelActionCfg.ModelActionList.Clear();
@@ -133,15 +126,15 @@
                 _modelActionCfg.SkillActionList.Add(item.ModelAction as SkillAction);
             XmlUtil.Serialize(_path, _modelActionCfg);
         }
-        [ButtonGroup("Button"), Button("删除", ButtonSizes.Large)]
+        [ButtonGroup("Button"), Button("删除文件", ButtonSizes.Large)]
         public void Delete()
         {
-            if (EditorUtility.DisplayDialog("删除操作", "确定要删除文件 -> " + Name, "确定", "取消"))
+            if (EditorUtility.DisplayDialog("删除操作", "确定要删除文件 -> " + ModelName, "确定", "取消"))
             {
                 if (File.Exists(_path))
                     File.Delete(_path);
 
-                ActionWindow window = ActionWindow.GetWindow<ActionWindow>();
+                ModelCfgWindow window = ModelCfgWindow.GetWindow<ModelCfgWindow>();
                 OdinMenuItem item = window.MenuTree.Selection.FirstOrDefault();
                 if (item != null)
                 {
@@ -160,17 +153,63 @@
         {
             return (GroupType)EditorGUILayout.Popup(content.text, (int)type, ActionHomeConfig.MenuItemNames);
         }
-        private void ModifyName()
+        private void ModifyModelName()
         {
-            var models = Csv.CfgManager.Model.Keys;
+            var models = new List<string>(Csv.CfgManager.Model.Keys);
+            models.Remove(ModelName);
             SimplePopupCreator.ShowDialog(new List<string>(models), (name) =>
             {
                 _modelActionCfg.ModelName = name;
+
+                ModelCfgWindow window = ModelCfgWindow.GetWindow<ModelCfgWindow>();
+                OdinMenuItem item = window.MenuTree.Selection.FirstOrDefault();
+                item.Name = name;
+                item.SearchString = name;
             });
         }
-        public void ModifyBaseName()
+        private void ModifyBaseName()
         {
-
+            List<string> models = HomeConfigPreview.Instance.GetAllModelList();
+            models.Remove(ModelName);
+            SimplePopupCreator.ShowDialog(new List<string>(models), (name) =>
+            {
+                _modelActionCfg.BaseModelName = name;
+                AddBaseModelAction(name);
+            });
+        }
+        private void AddBaseModelAction(string name)
+        {
+            var baseModel = HomeConfigPreview.Instance.GetModelEditor(name);
+            var modelDict = GetModelActionDict();
+            foreach (var item in baseModel.ModelActions)
+            {
+                if (modelDict.ContainsKey(item.ActionName))
+                {
+                    modelDict[item.ActionName].ActState = modelDict[item.ActionName].Equals(item) ?
+                        ModelActionEditor.ActionState.Inherit : ModelActionEditor.ActionState.Override;
+                }
+                else
+                {
+                    var action = new ModelActionEditor(item);
+                    action.ActState = ModelActionEditor.ActionState.Inherit;
+                    ModelActions.Add(action);
+                }
+            }
+            var skillDict = GetModelActionDict();
+            foreach (var item in baseModel.SkillActions)
+            {
+                if (skillDict.ContainsKey(item.ActionName))
+                {
+                    skillDict[item.ActionName].ActState = skillDict[item.ActionName].Equals(item) ?
+                        ModelActionEditor.ActionState.Inherit : ModelActionEditor.ActionState.Override;
+                }
+                else
+                {
+                    var action = new ModelActionEditor(item);
+                    action.ActState = ModelActionEditor.ActionState.Inherit;
+                    SkillActions.Add(action);
+                }
+            }
         }
 
         [Title("普通动作列表", bold: true), OnInspectorGUI, PropertyOrder(10)]
@@ -180,20 +219,44 @@
         public List<ModelActionEditor> ModelActions = new List<ModelActionEditor>();
         [Title("技能动作列表", bold: true), OnInspectorGUI, PropertyOrder(20)]
         private void OnSkillActionsHeader() { OnHeaderGUI(); }
-        [LabelText(" "), Space(-5f), ListDrawerSettings(OnTitleBarGUI = "OnGUISkilllAction", CustomAddFunction = "CreateSkillAction"), PropertyOrder(25)]
+        [LabelText(" "), Space(-5f), PropertyOrder(25)]
+        [ListDrawerSettings(OnTitleBarGUI = "OnGUISkilllAction", CustomAddFunction = "CreateSkillAction")]
         public List<ModelActionEditor> SkillActions = new List<ModelActionEditor>();
+
+        Dictionary<string, ModelActionEditor> GetModelActionDict()
+        {
+            var pairs = new Dictionary<string, ModelActionEditor>();
+            foreach (var item in ModelActions)
+            {
+                pairs.Add(item.ActionName, item);
+            }
+            return pairs;
+        }
+        Dictionary<string, ModelActionEditor> GetSkillActionDict()
+        {
+            var pairs = new Dictionary<string, ModelActionEditor>();
+            foreach (var item in SkillActions)
+            {
+                pairs.Add(item.ActionName, item);
+            }
+            return pairs;
+        }
+
+
 
         bool _isSelected_Model = false;
         bool _isSelected_Skill = false;
         private void CreateModelAction()
         {
-            ModelAction action = new ModelAction();
-            ModelActions.Add(new ModelActionEditor(action, false));
+            var action = new ModelActionEditor(this, new ModelAction(), false);
+            action.ActState = ModelActionEditor.ActionState.New;
+            ActionWindow.Init(this, action, (act) => ModelActions.Add(act));
         }
         private void CreateSkillAction()
         {
-            SkillAction action = new SkillAction();
-            SkillActions.Add(new ModelActionEditor(action, true));
+            var action = new ModelActionEditor(this, new SkillAction(), true);
+            action.ActState = ModelActionEditor.ActionState.New;
+            ActionWindow.Init(this, action, (act) => ModelActions.Add(act));
         }
         private void OnGUIModelAction()
         {
@@ -209,7 +272,7 @@
             GUILayout.Label(" ", GUILayout.Width(17f));
             GUILayout.Label("继承", SirenixGUIStyles.LabelCentered, GUILayout.Width(ModelActionEditor.INHERIT_WIDTH));
             GUILayout.Label("动作名称", SirenixGUIStyles.LabelCentered, GUILayout.Width(ModelActionEditor.ACT_NAME_WIDTH));
-            GUILayout.Label("动作来源", SirenixGUIStyles.LabelCentered, GUILayout.Width(ModelActionEditor.ACT_SRC_WIDTH));
+            GUILayout.Label("动画来源", SirenixGUIStyles.LabelCentered, GUILayout.Width(ModelActionEditor.ACT_SRC_WIDTH));
             GUILayout.Label("动画文件", SirenixGUIStyles.LabelCentered, GUILayout.Width(ModelActionEditor.ACT_CLIP_WIDTH));
             GUILayout.Label("操作", SirenixGUIStyles.LabelCentered, GUILayout.ExpandWidth(true));
             SirenixEditorGUI.EndHorizontalToolbar();

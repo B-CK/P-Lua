@@ -12,7 +12,7 @@ namespace Lson.Skill
 		/// <summary>
 		/// 动作来源
 		/// <summary>
-		public Lson.Skill.ActionSourceType ActionSource;
+		public bool IsFromOther;
 		/// <summary>
 		/// 其他模型名称,用于套用其他模型动作
 		/// <summary>

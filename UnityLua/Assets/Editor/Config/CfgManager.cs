@@ -13,7 +13,6 @@ namespace Csv
 
 		public static readonly Dictionary<int, Csv.AllType.AllClass> AllClass = new Dictionary<int, Csv.AllType.AllClass>();
 		public static readonly Dictionary<int, Csv.Card.Card> Card = new Dictionary<int, Csv.Card.Card>();
-		public static readonly Dictionary<string, Csv.Skill.ModelActionConfig> ModelActionConfig = new Dictionary<string, Csv.Skill.ModelActionConfig>();
 		public static readonly Dictionary<string, Csv.Model.Model> Model = new Dictionary<string, Csv.Model.Model>();
 
 		/// <summary>
@@ -41,8 +40,6 @@ namespace Csv
 			allclasss.ForEach(v => AllClass.Add(v.ID, v));
 			var cards = Load(ConfigDir + "Card/Card.data", (d) => new Card.Card(d));
 			cards.ForEach(v => Card.Add(v.ID, v));
-			var modelactionconfigs = Load(ConfigDir + "Skill/ModelActionConfig.data", (d) => new Skill.ModelActionConfig(d));
-			modelactionconfigs.ForEach(v => ModelActionConfig.Add(v.ModelName, v));
 			var models = Load(ConfigDir + "Model/Model.data", (d) => new Model.Model(d));
 			models.ForEach(v => Model.Add(v.Name, v));
 		}
@@ -51,7 +48,6 @@ namespace Csv
 		{
 			AllClass.Clear();
 			Card.Clear();
-			ModelActionConfig.Clear();
 			Model.Clear();
 		}
 

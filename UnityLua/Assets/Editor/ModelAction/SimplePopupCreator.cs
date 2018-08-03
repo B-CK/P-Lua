@@ -23,11 +23,6 @@
             }
         }
 
-        private static void onScritpableObjectCreated(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
         private class SimpleSelector<T> : OdinSelector<T>
         {
             private Action<T> _onSelected;

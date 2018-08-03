@@ -13,7 +13,7 @@ namespace Csv.Skill
 		/// <summary>
 		/// 动作来源
 		/// <summary>
-		public readonly int ActionSource;
+		public readonly bool IsFromOther;
 		/// <summary>
 		/// 其他模型名称,用于套用其他模型动作
 		/// <summary>
@@ -54,7 +54,7 @@ namespace Csv.Skill
 		public ModelAction(DataStream data)
 		{
 			this.ActionName = data.GetString();
-			this.ActionSource = data.GetInt();
+			this.IsFromOther = data.GetBool();
 			this.OtherModelName = data.GetString();
 			this.ActionFile = data.GetString();
 			this.PreActionFile = data.GetString();

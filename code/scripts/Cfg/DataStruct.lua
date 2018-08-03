@@ -226,7 +226,7 @@ function Stream:GetCfgSkillModelAction()
 	local o = {}
 	setmetatable(o, Cfg.Skill.ModelAction)
 	o.ActionName = self:GetString()
-	o.ActionSource = self:GetInt()
+	o.IsFromOther = self:GetBool()
 	o.OtherModelName = self:GetString()
 	o.ActionFile = self:GetString()
 	o.PreActionFile = self:GetString()
@@ -366,11 +366,6 @@ GetOrCreate('Cfg.Card')['CardType'] = {
 	NULL = -1,
 	Attack = 0,
 }
-GetOrCreate('Cfg.Skill')['ActionSourceType'] = {
-	NULL = -1,
-	SelfModel = 0,
-	OtherModel = 1,
-}
 GetOrCreate('Cfg.Skill')['SkillTargetType'] = {
 	NULL = -1,
 	Enemy = 0,
@@ -442,9 +437,10 @@ GetOrCreate('Cfg.Skill')['TraceBindType'] = {
 GetOrCreate('Cfg.Skill')['GroupType'] = {
 	NULL = -1,
 	None = 0,
-	Player = 1,
-	Monster = 2,
-	NPC = 3,
+	Base = 1,
+	Player = 2,
+	Monster = 3,
+	NPC = 4,
 }
 
 return Stream

@@ -335,7 +335,6 @@
     <Compile Include="Assets\Editor\Config\DataStream.cs" />
     <Compile Include="Assets\Editor\Config\Model\Model.cs" />
     <Compile Include="Assets\Editor\Config\Skill\Action.cs" />
-    <Compile Include="Assets\Editor\Config\Skill\ActionSourceType.cs" />
     <Compile Include="Assets\Editor\Config\Skill\Attack.cs" />
     <Compile Include="Assets\Editor\Config\Skill\BeAttackEffect.cs" />
     <Compile Include="Assets\Editor\Config\Skill\Bomb.cs" />
@@ -381,7 +380,6 @@
     <Compile Include="Assets\Editor\Lson\Lson.Card.CardType.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Model.Model.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Skill.Action.cs" />
-    <Compile Include="Assets\Editor\Lson\Lson.Skill.ActionSourceType.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Skill.Attack.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Skill.BeAttackEffect.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Skill.Bomb.cs" />
@@ -415,6 +413,7 @@
     <Compile Include="Assets\Editor\ModelAction\ActionWindow.cs" />
     <Compile Include="Assets\Editor\ModelAction\ModelActionConfigEditor.cs" />
     <Compile Include="Assets\Editor\ModelAction\ModelActionEditor.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ModelCfgWindow.cs" />
     <Compile Include="Assets\Editor\ModelAction\SimplePopupCreator.cs" />
     <Compile Include="Assets\Editor\XmlUtil.cs" />
     <Compile Include="Assets\LuaFramework\Editor\CustomSettings.cs" />

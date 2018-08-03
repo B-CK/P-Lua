@@ -16,32 +16,40 @@
         public const int ACT_SRC_WIDTH = 100;
         public const int ACT_CLIP_WIDTH = 100;
 
-        private readonly Dictionary<ActionSourceType, string> _actionSources = new Dictionary<ActionSourceType, string>
-        {
-            {ActionSourceType.SelfModel, "自己" },
-            {ActionSourceType.OtherModel, "其他模型" },
-        };
         private ModelAction _modelAction;
         private bool _hasClip = true;
         private bool _isSkillAction = false;
+        private ModelActionConfigEditor _modelEditor;
 
         [OnInspectorGUI]
         private void OnGUI()
         {
             EditorGUILayout.BeginHorizontal();
-            bool isInherit = IsInherit();
-            GUIHelper.PushColor(isInherit ? Color.yellow : Color.red);
-            GUILayout.Label(isInherit ? "重写" : "继承", SirenixGUIStyles.LabelCentered, GUILayout.Width(INHERIT_WIDTH));
+            Color color = Color.green;
+            string actState = "新建";
+            switch (ActState)
+            {
+                case ActionState.New:
+                    break;
+                case ActionState.Inherit:
+                    color = Color.yellow;
+                    actState = "继承";
+                    break;
+                case ActionState.Override:
+                    color = Color.red;
+                    actState = "重写";
+                    break;
+            }
+            GUIHelper.PushColor(color);
+            GUILayout.Label(actState, SirenixGUIStyles.LabelCentered, GUILayout.Width(INHERIT_WIDTH));
             GUIHelper.PopColor();
 
-            GUILayout.Label(Name, GUILayout.Width(ACT_NAME_WIDTH));
-            GUIHelper.PushColor(Color.cyan);
-            GUILayout.Label(ActionSource.ToString(), SirenixGUIStyles.LabelCentered, GUILayout.Width(ACT_SRC_WIDTH));
-            GUIHelper.PopColor();
+            GUILayout.Label(ActionName, SirenixGUIStyles.LabelCentered, GUILayout.Width(ACT_NAME_WIDTH));
+            GUILayout.Label(IsFromOther ? "其他" : "自己", SirenixGUIStyles.LabelCentered, GUILayout.Width(ACT_SRC_WIDTH));
 
-            bool isClipMiss = IsClipMiss();
-            GUIHelper.PushColor(isClipMiss ? EditorStyles.label.onNormal.textColor : Color.red);
-            GUILayout.Label(AnimationClip, SirenixGUIStyles.LabelCentered, GUILayout.Width(ACT_CLIP_WIDTH));
+            bool isClipMiss = string.IsNullOrEmpty(ActionClip);
+            GUIHelper.PushColor(isClipMiss ? Color.red : Color.green);
+            GUILayout.Label(isClipMiss ? "Error" : ActionClip, SirenixGUIStyles.LabelCentered, GUILayout.Width(ACT_CLIP_WIDTH));
             GUIHelper.PopColor();
 
             GUIHelper.PushGUIPositionOffset(Vector2.up * -4f);
@@ -56,7 +64,7 @@
             bool isSelected = IsSelected;
             if (isSelected)
                 GUIHelper.PushColor(Color.green);
-            if (GUILayout.Button("选择", SirenixGUIStyles.Button))
+            if (GUILayout.Button("选择", SirenixGUIStyles.Button, GUILayout.Width(40)))
             {
                 IsSelected = !IsSelected;
             }
@@ -66,45 +74,56 @@
 
             EditorGUILayout.EndHorizontal();
         }
-        private bool IsInherit()
-        {
-            return false;
-        }
-        private bool IsClipMiss()
-        {
-            return true;
-        }
         private void LoadTimeline()
         {
 
         }
         private void Modifier()
         {
-
+            ActionWindow.Init(_modelEditor, this);
         }
 
-
-
-        public ModelActionEditor() { }
-        public ModelActionEditor(ModelAction modelAction, bool isSkill)
+        public enum ActionState
         {
+            New,
+            Inherit,
+            Override,
+        }
+        public ActionState ActState { get; set; }
+        public ModelActionEditor() { }
+        public ModelActionEditor(ModelActionConfigEditor modelEditor, ModelAction modelAction, bool isSkill)
+        {
+            _modelEditor = modelEditor;
             _modelAction = modelAction;
             _isSkillAction = isSkill;
         }
-        public ModelAction ModelAction { get { return _modelAction; } }
-        public string Name { get { return _modelAction.ActionFile; } set { _modelAction.ActionFile = value; } }
-        public ActionSourceType ActionSource
+        public ModelActionEditor(ModelActionEditor actionEditor)
         {
-            get
-            {
-                return _modelAction.ActionSource;
-            }
-            set
-            {
-                _modelAction.ActionSource = value;
-            }
+            _modelEditor = actionEditor._modelEditor;
+            _modelAction = actionEditor._modelAction;
+            _isSkillAction = actionEditor._isSkillAction;
         }
-        public string AnimationClip { get { return _modelAction.ActionFile; } set { _modelAction.ActionFile = value; } }
+        public string[] GetActionClips()
+        {
+            return new string[] { "idel", "run", "attack" };
+        }
+        public override bool Equals(object obj)
+        {
+            ModelActionEditor other = obj as ModelActionEditor;
+            if (other == null) return false;
+
+            bool result = other.IsFromOther.Equals(IsFromOther);
+            result &= other.OtherModelName.Equals(OtherModelName);
+            result &= other.ActionClip.Equals(ActionClip);
+
+            return result;
+        }
+
+        public ModelAction ModelAction { get { return _modelAction; } }
+        public string ActionName { get { return string.IsNullOrEmpty(_modelAction.ActionName) ? string.Empty : _modelAction.ActionName; } set { _modelAction.ActionName = value; } }
+        public bool IsFromOther { get { return _modelAction.IsFromOther; } set { _modelAction.IsFromOther = value; } }
+        public string OtherModelName { get { return string.IsNullOrEmpty(_modelAction.OtherModelName) ? string.Empty : _modelAction.OtherModelName; } set { _modelAction.OtherModelName = value; } }
+        public string ActionClip { get { return string.IsNullOrEmpty(_modelAction.ActionFile) ? string.Empty : _modelAction.ActionFile; } set { _modelAction.ActionFile = value; } }
         public bool IsSelected { get; set; }
         public bool IsSkillAction { get { return _isSkillAction; } }
 

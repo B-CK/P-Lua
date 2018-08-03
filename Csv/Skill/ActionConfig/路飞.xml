@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModelActionConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ModelName>路飞</ModelName>
-  <GroupType>Monster</GroupType>
+  <GroupType>Player</GroupType>
+  <BaseModelName>金</BaseModelName>
   <ModelActionList>
     <ModelAction>
-      <ActionSource>SelfModel</ActionSource>
+      <ActionName>站</ActionName>
+      <IsFromOther>false</IsFromOther>
+      <OtherModelName />
+      <ActionFile>idel</ActionFile>
+      <ActionSpeed>0</ActionSpeed>
+      <LoopTimes>0</LoopTimes>
+      <EffectId>0</EffectId>
+      <Actions />
+      <Effects />
+    </ModelAction>
+    <ModelAction>
+      <ActionName>跑</ActionName>
+      <IsFromOther>false</IsFromOther>
+      <OtherModelName />
+      <ActionFile>run</ActionFile>
+      <ActionSpeed>0</ActionSpeed>
+      <LoopTimes>0</LoopTimes>
+      <EffectId>0</EffectId>
+      <Actions />
+      <Effects />
+    </ModelAction>
+    <ModelAction>
+      <ActionName>攻击</ActionName>
+      <IsFromOther>false</IsFromOther>
+      <OtherModelName />
+      <ActionFile>attack</ActionFile>
       <ActionSpeed>0</ActionSpeed>
       <LoopTimes>0</LoopTimes>
       <EffectId>0</EffectId>
@@ -12,50 +38,5 @@
       <Effects />
     </ModelAction>
   </ModelActionList>
-  <SkillActionList>
-    <SkillAction>
-      <ActionSource>SelfModel</ActionSource>
-      <ActionSpeed>0</ActionSpeed>
-      <LoopTimes>0</LoopTimes>
-      <EffectId>0</EffectId>
-      <Actions />
-      <Effects />
-      <SkillExpireTime>0</SkillExpireTime>
-      <SkillEndTime>0</SkillEndTime>
-      <NeedTarget>false</NeedTarget>
-      <CanInterrupt>false</CanInterrupt>
-      <SkillRange>0</SkillRange>
-      <CanShowSkillRange>false</CanShowSkillRange>
-      <CanRotate>false</CanRotate>
-      <CanMove>false</CanMove>
-      <StartMoveTime>0</StartMoveTime>
-      <EndMoveTime>0</EndMoveTime>
-      <RelateType>Self</RelateType>
-      <HitPoints />
-      <HitZones />
-      <BeAttackEffects />
-    </SkillAction>
-    <SkillAction>
-      <ActionSource>SelfModel</ActionSource>
-      <ActionSpeed>0</ActionSpeed>
-      <LoopTimes>0</LoopTimes>
-      <EffectId>0</EffectId>
-      <Actions />
-      <Effects />
-      <SkillExpireTime>0</SkillExpireTime>
-      <SkillEndTime>0</SkillEndTime>
-      <NeedTarget>false</NeedTarget>
-      <CanInterrupt>false</CanInterrupt>
-      <SkillRange>0</SkillRange>
-      <CanShowSkillRange>false</CanShowSkillRange>
-      <CanRotate>false</CanRotate>
-      <CanMove>false</CanMove>
-      <StartMoveTime>0</StartMoveTime>
-      <EndMoveTime>0</EndMoveTime>
-      <RelateType>Self</RelateType>
-      <HitPoints />
-      <HitZones />
-      <BeAttackEffects />
-    </SkillAction>
-  </SkillActionList>
+  <SkillActionList />
 </ModelActionConfig>

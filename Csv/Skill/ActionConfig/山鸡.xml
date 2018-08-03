@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ModelActionConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ModelName>山鸡</ModelName>
-  <GroupType>NPC</GroupType>
-  <ModelActionList />
-  <SkillActionList />
-</ModelActionConfig>
