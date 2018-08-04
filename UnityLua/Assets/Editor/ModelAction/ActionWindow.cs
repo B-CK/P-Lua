@@ -8,14 +8,14 @@
 
     internal class ActionWindow : EditorWindow
     {
-        public static void Init(ModelActionConfigEditor modelName, ModelActionEditor modelAction, Action<ModelActionEditor> result = null)
+        public static void Init(ModelActionConfigEditor modelEditor, ModelActionEditor modelAction, Action<ModelActionEditor> result = null)
         {
             var window = GetWindow<ActionWindow>(true, "行为配置窗口", true);
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 250);
             window.minSize = new Vector2(400, 250);
             window.maxSize = new Vector2(400, 250);
 
-            window._modelEditor = modelName;
+            window._selfModelEditor = modelEditor;
             window._nameStyle = SirenixGUIStyles.BoldTitleCentered;
             window._nameStyle.fontSize = 30;
             window._nameStyle.fontStyle = FontStyle.Bold;
@@ -24,40 +24,64 @@
             window._modelAction = modelAction;
             window._actionName = modelAction.ActionName;
             window._isFromOther = modelAction.IsFromOther;
-            window._actClipList = modelAction.GetActionClips();
             window._clipIndex = -1;
-            int length = window._actClipList.Length;
-            for (int i = 0; i < length; i++)
+            window._otherModel = modelAction.OtherModelName;
+            window._result = result;
+
+            if (modelAction.IsFromOther)
             {
-                string item = window._actClipList[i];
-                if (item.Equals(modelAction.ActionClip))
+                window._otherModelEditor = HomeConfigPreview.Instance.GetModelEditor(modelAction.OtherModelName);
+                window._actClipList = window._otherModelEditor.GetActionClips();
+            }
+            else
+            {
+                window._otherModel = string.Empty;
+                window._actClipList = modelEditor.GetActionClips();
+            }
+
+            if (ModelActionEditor.ActionState.New != modelAction.ActState)
+            {
+                int length = window._actClipList.Length;
+                for (int i = 0; i < length; i++)
                 {
-                    window._clipIndex = i;
-                    break;
+                    string item = window._actClipList[i];
+                    if (item.Equals(modelAction.ActionClip))
+                    {
+                        window._clipIndex = i;
+                        break;
+                    }
                 }
             }
-            window._otherModel = string.Empty;
-            window._result = result;
+
         }
 
         readonly Color _color = new Color(0.3f, 0.8f, 0.8f);
 
-        ModelActionConfigEditor _modelEditor;
         GUIStyle _nameStyle;
+        ModelActionConfigEditor _otherModelEditor;
+        ModelActionConfigEditor _selfModelEditor;
         Action<ModelActionEditor> _result;
 
         ModelActionEditor _modelAction;
         string _actionName;
         bool _isFromOther;
-        string[] _actClipList;
         int _clipIndex;
-        string _otherModel = string.Empty;
+        string[] _actClipList;
+        string _otherModel;
         void OnGUI()
         {
+
+            if (EditorApplication.isCompiling)
+            {
+                Debug.Log("[行为窗口]脚本正在编译,所以自动关闭窗口!");
+                Close();
+                return;
+            }
+
             SirenixEditorGUI.BeginBox();
             {
                 SirenixEditorGUI.BeginBoxHeader();
-                GUILayout.Label(_modelEditor.ModelName, _nameStyle);
+                GUILayout.Label(_selfModelEditor.ModelName, _nameStyle);
                 SirenixEditorGUI.EndBoxHeader();
                 switch (_modelAction.ActState)
                 {
@@ -75,7 +99,12 @@
                 {
                     GUILayout.Label("动画来源", GUILayout.Width(145));
                     if (GUILayout.Button("自己", _isFromOther ? SirenixGUIStyles.ButtonLeft : SirenixGUIStyles.ButtonLeftSelected))
+                    {
+                        _clipIndex = -1;
                         _isFromOther = false;
+                        _otherModel = string.Empty;
+                        _actClipList = _selfModelEditor.GetActionClips();
+                    }
                     if (GUILayout.Button("其他", _isFromOther ? SirenixGUIStyles.ButtonRightSelected : SirenixGUIStyles.ButtonRight))
                     {
                         _isFromOther = true;
@@ -84,6 +113,8 @@
                 }
                 EditorGUILayout.EndHorizontal();
 
+                if (_isFromOther)
+                    GUIHelper.PushGUIEnabled(!string.IsNullOrEmpty(_otherModel));
                 EditorGUILayout.BeginHorizontal();
                 {
                     _clipIndex = EditorGUILayout.Popup("动画文件", _clipIndex, _actClipList);
@@ -91,6 +122,8 @@
                         _clipIndex = -1;
                 }
                 EditorGUILayout.EndHorizontal();
+                if (_isFromOther)
+                    GUIHelper.PopGUIEnabled();
 
                 if (_isFromOther)
                 {
@@ -102,8 +135,13 @@
                         if (GUILayout.Button("修改", GUILayout.Width(45)))
                         {
                             var list = HomeConfigPreview.Instance.GetAllModelList();
-                            list.Remove(_modelEditor.ModelName);
-                            SimplePopupCreator.ShowDialog(list, (name) => _otherModel = name);
+                            list.Remove(_selfModelEditor.ModelName);
+                            SimplePopupCreator.ShowDialog(list, (name) =>
+                            {
+                                _otherModel = name;
+                                _otherModelEditor = HomeConfigPreview.Instance.GetModelEditor(name);
+                                _actClipList = _otherModelEditor.GetActionClips();
+                            });
                         }
                         if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(EditorGUIUtility.singleLineHeight)))
                             _otherModel = string.Empty;
@@ -126,7 +164,7 @@
                         bool hasSame = false;
                         if (!_modelAction.IsSkillAction)
                         {
-                            foreach (var item in _modelEditor.ModelActions)
+                            foreach (var item in _selfModelEditor.ModelActions)
                             {
                                 if (item.ActionName.Equals(_actionName))
                                 {
@@ -137,7 +175,7 @@
                         }
                         else
                         {
-                            foreach (var item in _modelEditor.SkillActions)
+                            foreach (var item in _selfModelEditor.SkillActions)
                             {
                                 if (item.ActionName.Equals(_actionName))
                                 {
@@ -165,7 +203,10 @@
         void OnDestroy()
         {
             _modelAction = null;
-            _modelEditor = null;
+            _selfModelEditor = null;
+            _otherModelEditor = null;
+            _result = null;
+            _actClipList = null;
         }
     }
 }

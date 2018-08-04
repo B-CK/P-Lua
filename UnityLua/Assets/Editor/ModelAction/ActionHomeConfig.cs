@@ -72,7 +72,15 @@
         [ShowInInspector, ReadOnly, LabelText("Csv存储目录"), PropertyOrder(-99)]
         public string ConfigDir { get { return string.Format("{0}/../{1}/", Application.dataPath, _config.ConfigRelativeDir); } }
 
-        public Dictionary<GroupType, List<ModelActionConfigEditor>> ModelGroupDict { get { return _config.ModelGroupDict; } }
+        public Dictionary<GroupType, List<ModelActionConfigEditor>> ModelGroupDict
+        {
+            get
+            {
+                if (_config == null)
+                    Init();
+                return _config.ModelGroupDict;
+            }
+        }
 
 
         [ButtonGroup("Config/Btns")]
@@ -178,10 +186,6 @@
         }
 
 
-        public void ClearTemp()
-        {
-
-        }
         public void UpdateClipbord(List<ModelActionEditor> editors)
         {
             _clipboard = editors;
@@ -200,6 +204,7 @@
             ModelGroupDict.Clear();
             CfgManager.Clear();
             _clipboard.Clear();
+            _modelDict.Clear();
         }
     }
 }

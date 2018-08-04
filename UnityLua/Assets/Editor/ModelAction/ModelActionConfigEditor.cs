@@ -37,9 +37,14 @@
             if (string.IsNullOrEmpty(BaseName)) return;
             AddBaseModelAction(BaseName);
         }
+        public string[] GetActionClips()
+        {
+            return _actClips;
+        }
 
         private ModelActionConfig _modelActionCfg;
         private string _path;
+        private string[] _actClips = new string[] { "idel", "run", "attack" };
 
         public string Path { get { return _path; } }
         public string MenuItemName { get { return string.Format("{0}/{1}", ActionHomeConfig.MenuItems[GroupType], ModelName); } }
@@ -81,6 +86,7 @@
         public string ModelName { get { return _modelActionCfg.ModelName; } set { } }
         [VerticalGroup("BaseGroup/Info"), LabelText("继承模型"), InlineButton("ModifyBaseName", "更换")]
         public string BaseName { get { return _modelActionCfg.BaseModelName; } set { } }
+
 
 
 
@@ -179,7 +185,7 @@
         }
         private void AddBaseModelAction(string name)
         {
-            var baseModel = HomeConfigPreview.Instance.GetModelEditor(name);
+            var baseModel = HomeConfigPreview.Instance.GetModelEditor(name); 
             var modelDict = GetModelActionDict();
             foreach (var item in baseModel.ModelActions)
             {

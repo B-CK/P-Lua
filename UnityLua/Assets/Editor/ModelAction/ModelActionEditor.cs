@@ -17,7 +17,6 @@
         public const int ACT_CLIP_WIDTH = 100;
 
         private ModelAction _modelAction;
-        private bool _hasClip = true;
         private bool _isSkillAction = false;
         private ModelActionConfigEditor _modelEditor;
 
@@ -103,10 +102,6 @@
             _modelAction = actionEditor._modelAction;
             _isSkillAction = actionEditor._isSkillAction;
         }
-        public string[] GetActionClips()
-        {
-            return new string[] { "idel", "run", "attack" };
-        }
         public override bool Equals(object obj)
         {
             ModelActionEditor other = obj as ModelActionEditor;
@@ -128,7 +123,6 @@
         public bool IsSkillAction { get { return _isSkillAction; } }
 
 
-
         private string DrawName(string name, GUIContent content)
         {
             List<string> array = new List<string> { "跑", "站立", "攻击" };
@@ -136,11 +130,5 @@
             index = EditorGUILayout.Popup("", 0, array.ToArray());
             return array[index];
         }
-
-        public void Refresh()
-        {
-            _hasClip = true;//检查动作文件是否存在,Unity内部检查
-        }
-
     }
 }

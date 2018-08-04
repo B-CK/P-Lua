@@ -6,7 +6,6 @@
     using System.Linq;
     using Sirenix.Utilities;
     using Sirenix.Utilities.Editor;
-    using System.Collections.Generic;
     using Sirenix.OdinInspector.Editor;
 
     internal class ModelCfgWindow : OdinMenuEditorWindow
@@ -80,7 +79,7 @@
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
 
-            Debug.Log("Close Action Windows~~");
+            Debug.Log("[模型配置窗口]关闭~~");
         }
     }
 }
