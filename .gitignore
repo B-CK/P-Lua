@@ -263,3 +263,4 @@ paket-files/
 __pycache__/
 *.pyc
 UnityLua/Library/metadata/02/02eac0e9b38d33c448fabddf06f08ea6
+UnityLua/.vs/UnityLua/v15/Server/sqlite3/storage.ide-shm
