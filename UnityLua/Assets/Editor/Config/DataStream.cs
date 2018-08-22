@@ -10,6 +10,7 @@ namespace Csv
 		{
 			_rows = File.ReadAllLines(path, encoding);
 			_rIndex = _cIndex = 0;
+			if (_rows.Length > 0)
 			_columns = _rows[_rIndex].Split("▃".ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
 		}
 

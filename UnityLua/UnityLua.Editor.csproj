@@ -28,7 +28,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_3;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_3;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ODIN_INSPECTOR</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -38,7 +38,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_3;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE</DefineConstants>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2017_4_3;UNITY_2017_4;UNITY_2017;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;ENABLE_SPRITE_MASKING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_RMGUI;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_STYLE_SHEETS;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ODIN_INSPECTOR</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -272,6 +272,24 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.OdinInspector.Editor">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization.Config">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.Config.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Utilities">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Utilities.Editor">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/mslzw/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -292,9 +310,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UnityLua.Plugins.csproj">
+      <Project>{0EF6ACE7-32D6-E281-39EE-3E43552F9566}</Project>
+      <Name>UnityLua.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityLua.csproj">
       <Project>{A34B2E0E-9A65-E2C4-A550-DB5EC3239FB7}</Project>
       <Name>UnityLua</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityLua.Editor.Plugins.csproj">
+      <Project>{388BB0DC-C376-8A1A-5B38-581771373A8F}</Project>
+      <Name>UnityLua.Editor.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +333,35 @@
     <Compile Include="Assets\Editor\Config\CfgManager.cs" />
     <Compile Include="Assets\Editor\Config\CfgObject.cs" />
     <Compile Include="Assets\Editor\Config\DataStream.cs" />
+    <Compile Include="Assets\Editor\Config\Model\Model.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\Action.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\Attack.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\BeAttackEffect.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\Bomb.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\EffectAlignType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\EffectGroup.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\EffectType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\FlyWeapon.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\GroupType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\HitPointGroup.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\HitSharpType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\HitZone.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\ModelAction.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\ModelActionConfig.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\Movement.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\MoveType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\ParticleEffect.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\ShakeScreen.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\ShakeType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SkillAction.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SkillRelateType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SkillTargetType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SoundEffect.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SpawnObject.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\SpawnType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\TraceBindType.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\TraceObject.cs" />
+    <Compile Include="Assets\Editor\Config\Skill\TraceType.cs" />
     <Compile Include="Assets\Editor\Export\ExportResource.All.cs" />
     <Compile Include="Assets\Editor\Export\ExportResource.AnimationClip.cs" />
     <Compile Include="Assets\Editor\Export\ExportResource.Audio.cs" />
@@ -323,8 +378,44 @@
     <Compile Include="Assets\Editor\Lson\Lson.Card.Card.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Card.CardElement.cs" />
     <Compile Include="Assets\Editor\Lson\Lson.Card.CardType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Model.Model.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.Action.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.Attack.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.BeAttackEffect.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.Bomb.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.EffectAlignType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.EffectGroup.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.EffectType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.FlyWeapon.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.GroupType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.HitPointGroup.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.HitSharpType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.HitZone.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.ModelAction.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.ModelActionConfig.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.Movement.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.MoveType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.ParticleEffect.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.ShakeScreen.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.ShakeType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SkillAction.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SkillRelateType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SkillTargetType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SoundEffect.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SpawnObject.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.SpawnType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.TraceBindType.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.TraceObject.cs" />
+    <Compile Include="Assets\Editor\Lson\Lson.Skill.TraceType.cs" />
     <Compile Include="Assets\Editor\Lson\LsonManager.cs" />
     <Compile Include="Assets\Editor\Lson\LsonObject.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ActionHomeConfig.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ActionWindow.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ModelActionConfigEditor.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ModelActionEditor.cs" />
+    <Compile Include="Assets\Editor\ModelAction\ModelCfgWindow.cs" />
+    <Compile Include="Assets\Editor\ModelAction\SimplePopupCreator.cs" />
+    <Compile Include="Assets\Editor\XmlUtil.cs" />
     <Compile Include="Assets\LuaFramework\Editor\CustomSettings.cs" />
     <Compile Include="Assets\LuaFramework\Editor\Examples\01_HelloWorld\HelloWorld.cs" />
     <Compile Include="Assets\LuaFramework\Editor\Examples\02_ScriptsFromFile\ScriptsFromFile.cs" />
@@ -399,6 +490,14 @@
     <None Include="Assets\LuaFramework\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\LuaFramework\ToLua\Injection\LuaInjectionSkipPaths.txt" />
     <None Include="Assets\LuaFramework\ToLua\readme.txt" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.xml" />
+    <None Include="Assets\Plugins\Sirenix\Assemblies\link.xml" />
+    <None Include="Assets\Plugins\Sirenix\Demos\Sample - RPG Editor\Icons\icons_by_ravenmore.txt" />
     <None Include="Assets\StreamingAssets\files.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

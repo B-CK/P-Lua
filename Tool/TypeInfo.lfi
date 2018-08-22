@@ -7,12 +7,8 @@
     <Class TypeType="Base" Name="float" />
     <Class TypeType="Base" Name="string" />
     <Class TypeType="Class" RelPath="AllType\Data所有Class类型.xlsx" NamespaceName="AllType" Name="AllClass" Group="" DataTable="Data所有Class类型.xlsx">
-      <Const Name="ConstString" Type="string" Des="常量字符串" Group="">
-        <Value>"Hello World"</Value>
-      </Const>
-      <Const Name="ConstFloat" Type="float" Des="常量浮点值" Group="">
-        <Value>3.141527</Value>
-      </Const>
+      <Const Name="ConstString" Type="string" Des="常量字符串" Group="" Value="&quot;Hello World&quot;" />
+      <Const Name="ConstFloat" Type="float" Des="常量浮点值" Group="" Value="3.141527" />
       <Field Name="ID" Type="int" Des="ID" Group="" />
       <Field Name="VarLong" Type="int" Des="长整型" Group="d" />
       <Field Name="VarFloat" Type="float" Des="浮点型" Group="d" />
@@ -38,82 +34,272 @@
       <Field Name="Cost" Type="long" Des="费用" Group="" />
       <Field Name="Elements" Type="dict&lt;Card.CardElement, long&gt;" Des="元素数据" Group="" />
     </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="Action" Group="">
+      <Field Name="Timeline" Type="float" Des="时间点" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="Attack" Group="" Inherit="Skill.Action">
+      <Field Name="Id" Type="int" Des="打击点id" Group="" />
+      <Field Name="HitZoneId" Type="int" Des="打击区域id" Group="" />
+      <Field Name="BeAttackEffectId" Type="int" Des="被击效果id" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ShakeScreen" Group="" Inherit="Skill.Action">
+      <Field Name="Type" Type="string" Des="震屏方式" Group="" />
+      <Field Name="Frequency" Type="int" Des="每秒震动的次数" Group="" />
+      <Field Name="FrequencyDuration" Type="float" Des="初始频率维持时间" Group="" />
+      <Field Name="FrequencyAtten" Type="float" Des="频率衰减" Group="" />
+      <Field Name="Amplitude" Type="float" Des="单次振幅" Group="" />
+      <Field Name="AmplitudeAtten" Type="float" Des="单次震动的衰减幅度" Group="" />
+      <Field Name="Life" Type="float" Des="本次震动持续时间，-1表持续到下一次震动触发或技能结束为止" Group="" />
+      <Field Name="MinRange" Type="float" Des="最小完整影响范围" Group="" />
+      <Field Name="MaxRange" Type="float" Des="最大影响范围" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="Movement" Group="" Inherit="Skill.Action">
+      <Field Name="Type" Type="Skill.MoveType" Des="移动方式" Group="" />
+      <Field Name="Duration" Type="float" Des="持续时间" Group="" />
+      <Field Name="Speed" Type="float" Des="速度" Group="" />
+      <Field Name="Acceleration" Type="float" Des="加速度" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ParticleEffect" Group="" Inherit="Skill.Action">
+      <Field Name="Id" Type="int" Des="粒子特效id" Group="" />
+      <Field Name="Type" Type="int" Des="特效类型" Group="" />
+      <Field Name="FadeOutTime" Type="float" Des="淡出时间" Group="" />
+      <Field Name="Path" Type="string" Des="粒子资源的路径" Group="" />
+      <Field Name="Life" Type="float" Des="粒子的存续时间，-1则与参与动画播放时间等长" Group="" />
+      <Field Name="FollowDirection" Type="bool" Des="是否跟随释放者方向" Group="" />
+      <Field Name="FollowBeAttackedDirection" Type="bool" Des="敌人的被击特效是否始终跟随敌我位置变化而转向" Group="" />
+      <Field Name="Scale" Type="float" Des="缩放大小" Group="" />
+      <Field Name="CasterBindType" Type="int" Des="释放者施放技能的位置编号" Group="" />
+      <Field Name="FollowBoneDirection" Type="bool" Des="是否跟随绑定骨骼方向" Group="" />
+      <Field Name="TargetBindType" Type="int" Des="被击者出现被击特效的位置" Group="" />
+      <Field Name="InstanceTraceType" Type="int" Des="跟踪类型(0:Line)" Group="" />
+      <Field Name="WorldOffsetX" Type="float" Des="特效世界偏移X" Group="" />
+      <Field Name="WorldOffsetY" Type="float" Des="特效世界偏移Y" Group="" />
+      <Field Name="WorldOffsetZ" Type="float" Des="特效世界偏移Z" Group="" />
+      <Field Name="WorldRotateX" Type="float" Des="特效世界旋转X" Group="" />
+      <Field Name="WorldRotateY" Type="float" Des="特效世界旋转Y" Group="" />
+      <Field Name="WorldRotateZ" Type="float" Des="特效世界旋转Z" Group="" />
+      <Field Name="BonePostionX" Type="float" Des="特效骨骼偏移X" Group="" />
+      <Field Name="BonePostionY" Type="float" Des="特效骨骼偏移Y" Group="" />
+      <Field Name="BonePostionZ" Type="float" Des="特效骨骼偏移Z" Group="" />
+      <Field Name="BoneRotationX" Type="float" Des="特效骨骼旋转X" Group="" />
+      <Field Name="BoneRotationY" Type="float" Des="特效骨骼旋转Y" Group="" />
+      <Field Name="BoneRotationZ" Type="float" Des="特效骨骼旋转Z" Group="" />
+      <Field Name="BoneScaleX" Type="float" Des="特效骨骼缩放X" Group="" />
+      <Field Name="BoneScaleY" Type="float" Des="特效骨骼缩放Y" Group="" />
+      <Field Name="BoneScaleZ" Type="float" Des="特效骨骼缩放Z" Group="" />
+      <Field Name="BoneName" Type="string" Des="骨骼名称" Group="" />
+      <Field Name="TraceTime" Type="float" Des="飞行时间" Group="" />
+      <Field Name="AlignType" Type="Skill.EffectAlignType" Des="屏幕对齐类型" Group="" />
+      <Field Name="IsPoolDestroy" Type="bool" Des="是否特效池管理" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SoundEffect" Group="" Inherit="Skill.Action">
+      <Field Name="Probability" Type="float" Des="触发概率" Group="" />
+      <Field Name="VolumeMin" Type="float" Des="最小音量" Group="" />
+      <Field Name="VolumeMax" Type="float" Des="最大音量" Group="" />
+      <Field Name="PathList" Type="list&lt;string&gt;" Des="音效资源路径列表" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SpawnObject" Group="" Inherit="Skill.Action">
+      <Field Name="Id" Type="int" Des="子物体ID" Group="" />
+      <Field Name="SpawnType" Type="int" Des="子物体类型" Group="" />
+      <Field Name="Life" Type="float" Des="子物体存活时间" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="TraceObject" Group="" Inherit="Skill.SpawnObject">
+      <Const Name="BODY_CORRECT" Type="float" Des="身体矫正值" Group="" Value="0.7" />
+      <Const Name="HEAD_CORRECT" Type="float" Des="头部矫正值" Group="" Value="1.3" />
+      <Field Name="EffectId" Type="int" Des="特效ID" Group="" />
+      <Field Name="IsTraceTarget" Type="bool" Des="是否追踪目标" Group="" />
+      <Field Name="TraceCurveId" Type="int" Des="飞行参数ID,数据有配置表" Group="" />
+      <Field Name="OffsetX" Type="float" Des="目标偏移X" Group="" />
+      <Field Name="OffsetY" Type="float" Des="目标偏移Y" Group="" />
+      <Field Name="OffsetZ" Type="float" Des="目标偏移Z" Group="" />
+      <Field Name="TraceType" Type="Skill.TraceType" Des="追踪类型" Group="" />
+      <Field Name="CasterBindType" Type="Skill.TraceBindType" Des="释放者绑定位置" Group="" />
+      <Field Name="TargetBindType" Type="Skill.TraceBindType" Des="被击者绑定位置" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="FlyWeapon" Group="" Inherit="Skill.TraceObject">
+      <Field Name="BulletRadius" Type="float" Des="子弹半径" Group="" />
+      <Field Name="PassBody" Type="bool" Des="是否穿透" Group="" />
+      <Field Name="BeAttackEffectId" Type="int" Des="被击效果ID" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="Bomb" Group="" Inherit="Skill.TraceObject">
+      <Field Name="Id" Type="int" Des="打击点组(HitPointGroup)ID" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ModelAction" Group="">
+      <Field Name="ActionName" Type="string" Des="行为名称" Group="" />
+      <Field Name="IsFromOther" Type="bool" Des="动作来源" Group="" />
+      <Field Name="OtherModelName" Type="string" Des="其他模型名称,用于套用其他模型动作" Group="" />
+      <Field Name="ActionFile" Type="string" Des="绑定的动作名称" Group="" />
+      <Field Name="PreActionFile" Type="string" Des="前摇动作名称" Group="" />
+      <Field Name="PostActionFile" Type="string" Des="后摇动作名称" Group="" />
+      <Field Name="ActionSpeed" Type="float" Des="动作播放速率" Group="" />
+      <Field Name="LoopTimes" Type="int" Des="动作循环次数" Group="" />
+      <Field Name="EffectId" Type="int" Des="特效ID" Group="" />
+      <Field Name="Actions" Type="list&lt;Skill.Action&gt;" Des="时间事件列表" Group="" />
+      <Field Name="Effects" Type="list&lt;Skill.EffectGroup&gt;" Des="特效组列表" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SkillAction" Group="" Inherit="Skill.ModelAction">
+      <Const Name="EXPIRE_TIME" Type="float" Des="默认后续技能使用期限,用于单个技能多段输出" Group="" Value="1" />
+      <Field Name="SkillExpireTime" Type="float" Des="后续技能使用期限,用于单个技能多段输出" Group="" />
+      <Field Name="SkillEndTime" Type="float" Des="技能结束时间" Group="" />
+      <Field Name="NeedTarget" Type="bool" Des="是否需要目标" Group="" />
+      <Field Name="CanInterrupt" Type="bool" Des="是否可被打断" Group="" />
+      <Field Name="SkillRange" Type="float" Des="技能作用范围[半径]" Group="" />
+      <Field Name="CanShowSkillRange" Type="bool" Des="是否显示技能范围" Group="" />
+      <Field Name="CanRotate" Type="bool" Des="放技能时人是否可以转动" Group="" />
+      <Field Name="CanMove" Type="bool" Des="放技能时人是否可以移动" Group="" />
+      <Field Name="StartMoveTime" Type="float" Des="开始位移时间，如果改值为-1 则改值等于技能开始时间" Group="" />
+      <Field Name="EndMoveTime" Type="float" Des="结束位移时间，如果改值为-1 则改值等于技能结束时间" Group="" />
+      <Field Name="RelateType" Type="Skill.SkillRelateType" Des="施放相对位置(1 自己 , 2 目标)" Group="" />
+      <Field Name="HitPoints" Type="list&lt;Skill.HitPointGroup&gt;" Des="打击点组列表" Group="" />
+      <Field Name="HitZones" Type="list&lt;Skill.HitZone&gt;" Des="打击区域列表" Group="" />
+      <Field Name="BeAttackEffects" Type="list&lt;Skill.BeAttackEffect&gt;" Des="被击效果列表" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="HitZone" Group="">
+      <Field Name="Id" Type="int" Des="打击区域id" Group="" />
+      <Field Name="Sharp" Type="Skill.HitSharpType" Des="打击范围的形态，0：方盒，1:圆柱,2:三棱柱" Group="" />
+      <Field Name="Zoffset" Type="float" Des="打击范围的中心点在Z轴上的偏移量，向前为正" Group="" />
+      <Field Name="Xlength" Type="float" Des="X方向长度" Group="" />
+      <Field Name="BottomHeight" Type="float" Des="底边距地面的高度" Group="" />
+      <Field Name="TopHeight" Type="float" Des="顶部距地面的高度" Group="" />
+      <Field Name="Zlength" Type="float" Des="Z方向长度" Group="" />
+      <Field Name="YAngle" Type="float" Des="以y轴为中心的切面角度" Group="" />
+      <Field Name="YRotation" Type="float" Des="打击区域绕y轴旋转角度（顺时针）,构成扇形" Group="" />
+      <Field Name="MaxTarget" Type="int" Des="最大数量" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="BeAttackEffect" Group="">
+      <Field Name="Id" Type="int" Des="被击效果id" Group="" />
+      <Field Name="Curve" Type="int" Des="被打击者的抛物曲线" Group="" />
+      <Field Name="DefencerAction" Type="string" Des="被打击者的受击动作，null为默认" Group="" />
+      <Field Name="DefencerEffectId" Type="int" Des="被打击者身上出现的被击特效，Null为默认" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="EffectGroup" Group="">
+      <Field Name="Id" Type="int" Des="特效组ID" Group="" />
+      <Field Name="Name" Type="string" Des="特效组名称" Group="" />
+      <Field Name="Actions" Type="list&lt;Skill.Action&gt;" Des="特效组行为列表" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="HitPointGroup" Group="">
+      <Field Name="Id" Type="int" Des="打击点组ID" Group="" />
+      <Field Name="Name" Type="string" Des="打击点组名称" Group="" />
+      <Field Name="Attacks" Type="list&lt;Skill.Attack&gt;" Des="打击点列表" Group="" />
+    </Class>
     <List TypeType="List" Name="list&lt;string&gt;" ItemType="string" />
     <List TypeType="List" Name="list&lt;AllType.SingleClass&gt;" ItemType="AllType.SingleClass" />
     <Dict TypeType="Dict" Name="dict&lt;int, string&gt;" KeyType="int" ValueType="string" />
     <Dict TypeType="Dict" Name="dict&lt;long, Card.CardElement&gt;" KeyType="long" ValueType="Card.CardElement" />
     <Dict TypeType="Dict" Name="dict&lt;string, AllType.SingleClass&gt;" KeyType="string" ValueType="AllType.SingleClass" />
     <Dict TypeType="Dict" Name="dict&lt;Card.CardElement, long&gt;" KeyType="Card.CardElement" ValueType="long" />
+    <List TypeType="List" Name="list&lt;Skill.ModelAction&gt;" ItemType="Skill.ModelAction" />
+    <List TypeType="List" Name="list&lt;Skill.SkillAction&gt;" ItemType="Skill.SkillAction" />
+    <List TypeType="List" Name="list&lt;Skill.Action&gt;" ItemType="Skill.Action" />
+    <List TypeType="List" Name="list&lt;Skill.EffectGroup&gt;" ItemType="Skill.EffectGroup" />
+    <List TypeType="List" Name="list&lt;Skill.HitPointGroup&gt;" ItemType="Skill.HitPointGroup" />
+    <List TypeType="List" Name="list&lt;Skill.HitZone&gt;" ItemType="Skill.HitZone" />
+    <List TypeType="List" Name="list&lt;Skill.BeAttackEffect&gt;" ItemType="Skill.BeAttackEffect" />
+    <List TypeType="List" Name="list&lt;Skill.Attack&gt;" ItemType="Skill.Attack" />
+    <Class TypeType="Class" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ModelActionConfig" Group="">
+      <Field Name="ModelName" Type="string" Des="模型名称" Group="" />
+      <Field Name="GroupType" Type="Skill.GroupType" Des="模型分组类型" Group="Editor" />
+      <Field Name="BaseModelName" Type="string" Des="基础模型名称" Group="" />
+      <Field Name="ModelActionList" Type="list&lt;Skill.ModelAction&gt;" Des="普通动作" Group="" />
+      <Field Name="SkillActionList" Type="list&lt;Skill.SkillAction&gt;" Des="技能动作" Group="" />
+    </Class>
+    <Class TypeType="Class" RelPath="Model\model.xlsx" NamespaceName="Model" Name="Model" Group="" DataTable="model.xlsx">
+      <Field Name="Name" Type="string" Des="模型名" Group="" />
+      <Field Name="Level" Type="int" Des="模型级别" Group="" />
+    </Class>
   </ClassInfos>
   <EnumInfos>
     <Enum TypeType="Enum" RelPath="AllType\Data所有Class类型.xlsx" NamespaceName="AllType" Name="CommondEnum" Group="">
-      <Item Name="Attack" Type="int" Des="攻击" Group="">
-        <Value>0</Value>
-      </Item>
-      <Item Name="Extract" Type="int" Des="抽牌" Group="">
-        <Value>1</Value>
-      </Item>
-      <Item Name="Renounce" Type="int" Des="弃牌" Group="">
-        <Value>2</Value>
-      </Item>
-      <Item Name="Armor" Type="int" Des="护甲" Group="">
-        <Value>3</Value>
-      </Item>
-      <Item Name="Control" Type="int" Des="控制" Group="">
-        <Value>4</Value>
-      </Item>
-      <Item Name="Cure" Type="int" Des="治疗" Group="">
-        <Value>5</Value>
-      </Item>
-      <Item Name="Oneself" Type="int" Des="自残" Group="">
-        <Value>6</Value>
-      </Item>
-      <Item Name="Hand" Type="int" Des="手牌" Group="">
-        <Value>7</Value>
-      </Item>
-      <Item Name="Brary" Type="int" Des="牌库" Group="">
-        <Value>8</Value>
-      </Item>
-      <Item Name="Handack" Type="int" Des="手牌攻击" Group="">
-        <Value>9</Value>
-      </Item>
+      <Item Name="Attack" Type="int" Des="攻击" Group="" Value="0" />
+      <Item Name="Extract" Type="int" Des="抽牌" Group="" Value="1" />
+      <Item Name="Renounce" Type="int" Des="弃牌" Group="" Value="2" />
+      <Item Name="Armor" Type="int" Des="护甲" Group="" Value="3" />
+      <Item Name="Control" Type="int" Des="控制" Group="" Value="4" />
+      <Item Name="Cure" Type="int" Des="治疗" Group="" Value="5" />
+      <Item Name="Oneself" Type="int" Des="自残" Group="" Value="6" />
+      <Item Name="Hand" Type="int" Des="手牌" Group="" Value="7" />
+      <Item Name="Brary" Type="int" Des="牌库" Group="" Value="8" />
+      <Item Name="Handack" Type="int" Des="手牌攻击" Group="" Value="9" />
     </Enum>
     <Enum TypeType="Enum" RelPath="Card\卡牌_Card.xlsx" NamespaceName="Card" Name="CardElement" Group="">
-      <Item Name="Attack" Type="int" Des="攻击" Group="">
-        <Value>0</Value>
-      </Item>
-      <Item Name="Extract" Type="int" Des="抽牌" Group="">
-        <Value>1</Value>
-      </Item>
-      <Item Name="Renounce" Type="int" Des="弃牌" Group="">
-        <Value>2</Value>
-      </Item>
-      <Item Name="Armor" Type="int" Des="护甲" Group="">
-        <Value>3</Value>
-      </Item>
-      <Item Name="Control" Type="int" Des="控制" Group="">
-        <Value>4</Value>
-      </Item>
-      <Item Name="Cure" Type="int" Des="治疗" Group="">
-        <Value>5</Value>
-      </Item>
-      <Item Name="Oneself" Type="int" Des="自残" Group="">
-        <Value>6</Value>
-      </Item>
-      <Item Name="Hand" Type="int" Des="手牌" Group="">
-        <Value>7</Value>
-      </Item>
-      <Item Name="Brary" Type="int" Des="牌库" Group="">
-        <Value>8</Value>
-      </Item>
-      <Item Name="Handack" Type="int" Des="手牌攻击" Group="">
-        <Value>9</Value>
-      </Item>
+      <Item Name="Attack" Type="int" Des="攻击" Group="" Value="0" />
+      <Item Name="Extract" Type="int" Des="抽牌" Group="" Value="1" />
+      <Item Name="Renounce" Type="int" Des="弃牌" Group="" Value="2" />
+      <Item Name="Armor" Type="int" Des="护甲" Group="" Value="3" />
+      <Item Name="Control" Type="int" Des="控制" Group="" Value="4" />
+      <Item Name="Cure" Type="int" Des="治疗" Group="" Value="5" />
+      <Item Name="Oneself" Type="int" Des="自残" Group="" Value="6" />
+      <Item Name="Hand" Type="int" Des="手牌" Group="" Value="7" />
+      <Item Name="Brary" Type="int" Des="牌库" Group="" Value="8" />
+      <Item Name="Handack" Type="int" Des="手牌攻击" Group="" Value="9" />
     </Enum>
     <Enum TypeType="Enum" RelPath="Card\卡牌_Card.xlsx" NamespaceName="Card" Name="CardType" Group="">
-      <Item Name="Attack" Type="int" Des="攻击牌" Group="">
-        <Value>0</Value>
-      </Item>
+      <Item Name="Attack" Type="int" Des="攻击牌" Group="" Value="0" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SkillTargetType" Group="">
+      <Item Name="Enemy" Type="int" Des="敌方目标" Group="" Value="0" />
+      <Item Name="Teammate" Type="int" Des="己方目标" Group="" Value="1" />
+      <Item Name="Self" Type="int" Des="自己" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SkillRelateType" Group="">
+      <Item Name="Self" Type="int" Des="相对于自己" Group="" Value="0" />
+      <Item Name="Target" Type="int" Des="相对于目标" Group="" Value="1" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="HitSharpType" Group="">
+      <Item Name="Cube" Type="int" Des="立方体" Group="" Value="0" />
+      <Item Name="Cylinder" Type="int" Des="圆柱形" Group="" Value="1" />
+      <Item Name="Trangle" Type="int" Des="三棱柱" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="ShakeType" Group="">
+      <Item Name="Horizontal" Type="int" Des="水平" Group="" Value="0" />
+      <Item Name="Vertical" Type="int" Des="垂直" Group="" Value="1" />
+      <Item Name="Mix" Type="int" Des="混合" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="MoveType" Group="">
+      <Item Name="MoveBack" Type="int" Des="方向移动" Group="" Value="0" />
+      <Item Name="MoveToTarget" Type="int" Des="向目标移动" Group="" Value="1" />
+      <Item Name="MoveInDirection" Type="int" Des="按当前方向移动" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="EffectType" Group="">
+      <Item Name="Stand" Type="int" Des="站立" Group="" Value="0" />
+      <Item Name="Follow" Type="int" Des="跟随" Group="" Value="1" />
+      <Item Name="Trace" Type="int" Des="" Group="" Value="2" />
+      <Item Name="TracePos" Type="int" Des="" Group="" Value="3" />
+      <Item Name="BindToCamera" Type="int" Des="绑定到相机" Group="" Value="4" />
+      <Item Name="UIStand" Type="int" Des="UI站立" Group="" Value="5" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="EffectAlignType" Group="">
+      <Item Name="None" Type="int" Des="" Group="" Value="0" />
+      <Item Name="LeftTop" Type="int" Des="" Group="" Value="1" />
+      <Item Name="Left" Type="int" Des="" Group="" Value="2" />
+      <Item Name="LeftBottom" Type="int" Des="" Group="" Value="3" />
+      <Item Name="Top" Type="int" Des="" Group="" Value="4" />
+      <Item Name="Center" Type="int" Des="" Group="" Value="5" />
+      <Item Name="Bottom" Type="int" Des="" Group="" Value="6" />
+      <Item Name="RightTop" Type="int" Des="" Group="" Value="7" />
+      <Item Name="Right" Type="int" Des="" Group="" Value="8" />
+      <Item Name="RightBottom" Type="int" Des="" Group="" Value="9" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="SpawnType" Group="">
+      <Item Name="FlyWeapon" Type="int" Des="飞行武器" Group="" Value="0" />
+      <Item Name="Bomb" Type="int" Des="炸弹" Group="" Value="1" />
+      <Item Name="Object" Type="int" Des="游戏对象" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="TraceType" Group="">
+      <Item Name="Fly" Type="int" Des="飞" Group="" Value="0" />
+      <Item Name="Fixed" Type="int" Des="固定" Group="" Value="1" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="TraceBindType" Group="">
+      <Item Name="Body" Type="int" Des="身体" Group="" Value="0" />
+      <Item Name="Head" Type="int" Des="头" Group="" Value="1" />
+      <Item Name="Foot" Type="int" Des="脚" Group="" Value="2" />
+    </Enum>
+    <Enum TypeType="Enum" RelPath="Skill\skill.xlsx" NamespaceName="Skill" Name="GroupType" Group="">
+      <Item Name="None" Type="int" Des="临时组" Group="" Value="0" />
+      <Item Name="Base" Type="int" Des="基础类型" Group="" Value="1" />
+      <Item Name="Player" Type="int" Des="玩家" Group="" Value="2" />
+      <Item Name="Monster" Type="int" Des="怪物" Group="" Value="3" />
+      <Item Name="NPC" Type="int" Des="NPC" Group="" Value="4" />
     </Enum>
   </EnumInfos>
 </TypeInfo>
